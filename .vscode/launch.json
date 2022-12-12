@@ -1,0 +1,131 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "isumi",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "isumi (profile mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "isumi (release mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "components",
+            "cwd": "packages\\components",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "components (profile mode)",
+            "cwd": "packages\\components",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "components (release mode)",
+            "cwd": "packages\\components",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "form_inputs",
+            "cwd": "packages\\form_inputs",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "form_inputs (profile mode)",
+            "cwd": "packages\\form_inputs",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "form_inputs (release mode)",
+            "cwd": "packages\\form_inputs",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "onyxsio",
+            "cwd": "packages\\onyxsio",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "provider",
+            "cwd": "packages\\provider",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "provider (profile mode)",
+            "cwd": "packages\\provider",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "provider (release mode)",
+            "cwd": "packages\\provider",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "remote_data",
+            "cwd": "packages\\remote_data",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "remote_data (profile mode)",
+            "cwd": "packages\\remote_data",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "remote_data (release mode)",
+            "cwd": "packages\\remote_data",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "splashscreen",
+            "cwd": "packages\\splashscreen",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "splashscreen (profile mode)",
+            "cwd": "packages\\splashscreen",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "splashscreen (release mode)",
+            "cwd": "packages\\splashscreen",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        }
+    ]
+}
