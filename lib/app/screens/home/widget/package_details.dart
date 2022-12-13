@@ -3,8 +3,10 @@ import 'package:isumi/core/utils/utils.dart';
 import 'package:onyxsio/onyxsio.dart';
 
 class PackageDetails extends StatefulWidget {
-  const PackageDetails({Key? key, required this.package}) : super(key: key);
-  final Function(Package) package;
+  const PackageDetails({Key? key, required this.packageFun, this.package})
+      : super(key: key);
+  final Function(Package) packageFun;
+  final Package? package;
   @override
   State<PackageDetails> createState() => _ExpandedListDropState();
 }
@@ -35,6 +37,7 @@ class _ExpandedListDropState extends State<PackageDetails>
       curve: Curves.fastOutSlowIn,
     );
     _runExpandCheck();
+    setupData();
   }
 
   void _runExpandCheck() {
@@ -42,6 +45,18 @@ class _ExpandedListDropState extends State<PackageDetails>
       expandController.forward();
     } else {
       expandController.reverse();
+    }
+  }
+
+  void setupData() {
+    if (widget.package != null) {
+      setState(() {
+        lengthController.text = widget.package!.dimensions!.length!;
+        widthController.text = widget.package!.dimensions!.width!;
+        heightController.text = widget.package!.dimensions!.height!;
+        weightText = widget.package!.weight!.unit!;
+        weightValue.text = widget.package!.weight!.value!;
+      });
     }
   }
 
@@ -163,7 +178,7 @@ class _ExpandedListDropState extends State<PackageDetails>
                             ));
                         isShow = !isShow;
                         _runExpandCheck();
-                        widget.package(package);
+                        widget.packageFun(package);
                         setState(() {});
                       },
                       text: 'Save changes')

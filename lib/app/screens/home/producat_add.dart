@@ -99,7 +99,7 @@ class _ProductAddPageState extends State<ProductAddPage> {
                 image: AppIcon.dress,
                 text: 'Product Variants'),
             SizedBox(height: 10.w),
-            PackageDetails(package: getPackageDetails),
+            PackageDetails(packageFun: getPackageDetails),
             CheckBoxDrop(
               type: TXT.deliveryPrice,
               controller: pDelivery,
@@ -154,17 +154,15 @@ class _ProductAddPageState extends State<ProductAddPage> {
         package: package,
       );
 
-      await FirestoreRepository.addProduct(context, product, imageFileList);
-      // if (resulte == 'success') {
-      // showAutoCloseDialog(context, 'success', 'done');
-      // Navigator.of(context).pushNamedAndRemoveUntil(
-      //   '/MainPage',
-      //   (route) => false,
-      // );
-      // Navigator.pop(context);
-      // }
+      await FirestoreRepository.addProduct(context, product, imageFileList)
+          .then((value) {
+        Navigator.of(context).pushNamedAndRemoveUntil(
+          '/MainPage',
+          (route) => false,
+        );
+      });
     } else {
-      // showAutoCloseDialog(context, 'something went wrong', 'error');
+      // TODO
     }
   }
 

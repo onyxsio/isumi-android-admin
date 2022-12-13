@@ -73,7 +73,7 @@ class Utils {
   static offerCal({name, amount, offer}) {
     var cal = ((double.parse(amount) * double.parse(offer)) / 100);
 
-    return currency(amount: cal, name: name);
+    return currency(amount: (double.parse(amount) - cal), name: name);
   }
 }
 

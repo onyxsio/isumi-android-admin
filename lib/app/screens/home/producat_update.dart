@@ -4,6 +4,7 @@ import 'package:isumi/core/utils/utils.dart';
 import 'package:onyxsio/onyxsio.dart';
 
 import 'producat_add_veriant.dart';
+import 'widget/package_details.dart';
 
 class ProductUpdatePage extends StatefulWidget {
   final Product product;
@@ -19,11 +20,12 @@ class _ProductUpdatePageState extends State<ProductUpdatePage> {
   var pPrice = TextEditingController();
   // var pQuantity = TextEditingController();
   var pDescription = TextEditingController();
-  var pDiscount = TextEditingController();
-  // var pDelivery = TextEditingController();
-  // var pDays = TextEditingController();
+  // var pDiscount = TextEditingController();
+  var pDelivery = TextEditingController();
+  var pDays = TextEditingController();
   //
   final ImagePicker imagePicker = ImagePicker();
+  Package? package = Package();
   // Create List for XFile image
   List<XFile>? imageFileList = [];
   List imagePathList = [];
@@ -47,21 +49,21 @@ class _ProductUpdatePageState extends State<ProductUpdatePage> {
       pName.text = widget.product.title!;
       pDescription.text = widget.product.description!;
       imagePathList.addAll(widget.product.images!);
-      // category = widget.product.category;
-      // pCurrency = widget.product.currency;
-      // pType = widget.product.type;
+      package = widget.product.package;
+      if (widget.product.shipping!.deliveryPrice != null) {
+        pDelivery.text = widget.product.shipping!.deliveryPrice!;
+      }
+      if (widget.product.shipping!.returnDays != null) {
+        pDays.text = widget.product.shipping!.returnDays!;
+      }
 
+      // if (widget.product.price!.discount != null) {
+      //   pDiscount.text = widget.product.price!.discount!;
+      // }
+      // if (widget.product.offers!.percentage != null) {
+      //   pDiscount.text = widget.product.offers!.percentage!;
+      // }
       productDataList.addAll(widget.product.variant!);
-
-      // if (widget.product.returnDays != null) {
-      //   pDays.text = widget.product.returnDays!;
-      // }
-      // if (widget.product.delivery != null) {
-      //   pDelivery.text = widget.product.delivery!;
-      // }
-      // if (widget.product.discount != null) {
-      //   pDiscount.text = widget.product.discount!;
-      // }
     });
   }
 
@@ -69,7 +71,11 @@ class _ProductUpdatePageState extends State<ProductUpdatePage> {
   void changeColor(Color color) {
     setState(() => pickerColor = color.value.toString());
   }
+
 //
+  void getPackageDetails(Package value) {
+    setState(() => package = value);
+  }
 
   //
   void selectImages() async {
@@ -92,45 +98,8 @@ class _ProductUpdatePageState extends State<ProductUpdatePage> {
     if (products != null) {
       setState(() => productDataList.addAll(products));
     }
-    // Map<String, dynamic> map3 = {};
-
-    // for (var product in products!) {
-    //   var subv = [];
-    //   for (var customer in product.subvariant!) {
-    //     subv.add(customer.toJson());
-    //   }
-
-    // map3['color'] = product.color;
-    // map3['subVariant'] = subv;
-    // var sub234 = ProductVariant.fromJson(map3);
-
-    // setState(() => productDataList.add(sub234));
-    // }
   }
 
-//
-  // void setVeriant() {
-  //   if (productDataList.isNotEmpty) {
-  //     Map<String, dynamic> map3 = {};
-
-  //     for (var product in productDataList) {
-  //       var subv = [];
-  //       for (var customer in product.subVariant) {
-  //         // TODO
-  //         // var sub = ProductSub.fromJson(customer);
-  //         // var sub = ProductSub.fromJson(customer);
-  //         subv.add(customer.toJson());
-  //       }
-
-  //       map3['color'] = product.color;
-  //       map3['subVariant'] = subv;
-  //       var sub234 = ProductVariant.fromJson(map3);
-  //       seen.add(sub234);
-  //     }
-  //   }
-  // }
-
-//
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -171,47 +140,23 @@ class _ProductUpdatePageState extends State<ProductUpdatePage> {
               image: AppIcon.dress,
               text: 'Product Variants'),
           SizedBox(height: 5.w),
-          // SizedBox(height: 5.w),
-          // CheckBoxDrop(
-          //   type: TXT.discountPrice,
-          //   controller: pDiscount,
-          //   onOptionSelected: (optionItem) {
-          //     setState(() => pCurrency = optionItem);
-          //   },
-          //   title: 'Is there a price reduction?',
-          // ),
-          // CheckBoxDrop(
-          //   type: TXT.deliveryPrice,
-          //   controller: pDelivery,
-          //   onOptionSelected: (optionItem) {
-          //     setState(() => pCurrency = optionItem);
-          //   },
-          //   title: 'Is there free delivery?',
-          // ),
-          // CheckBoxDrop(
-          //   type: TXT.returnDays,
-          //   controller: pDays,
-          //   prefex: false,
-          //   title: 'Is there a return?',
-          // ),
+          PackageDetails(packageFun: getPackageDetails, package: package),
           SizedBox(height: 5.w),
-          // SelectDropList(
-          //   (optionItem) {
-          //     setState(() => category = optionItem);
-          //   },
-          //   categoryGender,
-          //   selectOption: category,
-          //   title: "Select Product Category",
-          // ),
-          SizedBox(height: 5.w),
-          // SelectDropList(
-          //   (optionItem) {
-          //     setState(() => pType = optionItem);
-          //   },
-          //   categoryGarment,
-          //   selectOption: pType,
-          //   title: "Select Product Type",
-          // ),
+          // TXTHeader.header2("Discount percentage"),
+          // TextBox(
+          //     type: TXT.discountPrice,
+          //     hintText: 'Please enter the discount percentage',
+          //     controller: pDiscount),
+          TXTHeader.header2("Delivery charge"),
+          TextBox(
+              type: TXT.deliveryPrice,
+              hintText: 'Is there a delivery charge?',
+              controller: pDelivery),
+          TXTHeader.header2("Return Days"),
+          TextBox(
+              type: TXT.returnDays,
+              hintText: 'Number of days a return is valid',
+              controller: pDays),
           SizedBox(height: 5.w),
           MainButton(
               onTap: () {
@@ -241,11 +186,20 @@ class _ProductUpdatePageState extends State<ProductUpdatePage> {
         variant: productDataList,
         images: imagePathList,
         rivews: widget.product.rivews,
+        shipping: Shipping(
+          deliveryPrice: pDelivery.text,
+          returnDays: pDays.text,
+        ),
+        package: package,
       );
 
       await FirestoreRepository.updateProduct(
-              product, imageFileList, productDataList)
-          .then((value) {
+        context,
+        product,
+        imageFileList,
+        productDataList,
+        // pDiscount.text,
+      ).then((value) {
         // DialogBoxes.showAutoCloseDialog(context, message: value);
         Navigator.of(context).pushNamedAndRemoveUntil(
           '/MainPage',

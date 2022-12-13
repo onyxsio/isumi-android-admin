@@ -8,13 +8,13 @@ class DialogBoxes {
   //     AutoCloseDialog._context = context;
 
   static void showAutoCloseDialog(BuildContext context,
-          {required String message}) async =>
+          {required String message, required InfoDialog type}) async =>
       await showDialog(
           context: context,
           barrierDismissible: false,
           builder: (BuildContext context) {
             return AutoDialogBoxUI(
-              infoDialog: InfoDialog.error,
+              infoDialog: type,
               message: message,
             );
           });

@@ -95,8 +95,12 @@ class _SelectDropListState extends State<SelectDropList>
     );
   }
 
-  Wrap _buildDropListOptions() {
-    return Wrap(
+  Widget _buildDropListOptions() {
+    return GridView.extent(
+      maxCrossAxisExtent: 20.w,
+      mainAxisSpacing: 1.w,
+      crossAxisSpacing: 1.w,
+      shrinkWrap: true,
       children: widget.dropList.map((item) => _buildSubMenu(item)).toList(),
     );
   }
