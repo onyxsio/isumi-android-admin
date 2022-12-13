@@ -1,14 +1,14 @@
-import 'package:components/components.dart';
 import 'package:flutter/material.dart';
+import 'package:onyxsio/onyxsio.dart';
 
 //
 class SelectDropList extends StatefulWidget {
   final Function(String valueItem) onOptionSelected;
   final List dropList;
-  final String title;
+  final String? title;
   final String? selectOption;
   const SelectDropList(this.onOptionSelected, this.dropList,
-      {Key? key, required this.title, this.selectOption})
+      {Key? key, this.title, this.selectOption})
       : super(key: key);
 
   @override
@@ -54,10 +54,12 @@ class _SelectDropListState extends State<SelectDropList>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        TXTHeader.header2(widget.title),
-        SizedBox(height: 5.w),
+        if (widget.title != null) TXTHeader.header2(widget.title!),
+        if (widget.title != null) SizedBox(height: 5.w),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 17),
+          // padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.w),
+          margin: widget.title != null ? null : EdgeInsets.only(top: 3.w),
           decoration: BoxDeco.itemSizeCard,
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -93,8 +95,8 @@ class _SelectDropListState extends State<SelectDropList>
     );
   }
 
-  Column _buildDropListOptions() {
-    return Column(
+  Wrap _buildDropListOptions() {
+    return Wrap(
       children: widget.dropList.map((item) => _buildSubMenu(item)).toList(),
     );
   }

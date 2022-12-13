@@ -1,6 +1,5 @@
-import 'package:components/config/size.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:onyxsio/onyxsio.dart';
 
 class CustomDialogBox extends StatefulWidget {
   final String title, descriptions, text, img;

@@ -1,7 +1,5 @@
-import 'package:components/config/size.dart';
+import 'package:onyxsio/onyxsio.dart';
 import 'package:flutter/material.dart';
-
-import 'colors.dart';
 
 //
 class Fonts {

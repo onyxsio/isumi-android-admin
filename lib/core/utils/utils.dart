@@ -78,3 +78,4 @@ class Utils {
 }
 
 List<String> currencyList = ["USD", "JPY", "LKR"];
+List<String> weightUnitList = ["kg", "g", "oz", 'lbs'];

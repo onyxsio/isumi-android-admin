@@ -1,11 +1,7 @@
-import 'package:components/config/colors.dart';
-import 'package:components/config/size.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
-import 'textbox_type.dart';
+import 'package:onyxsio/onyxsio.dart';
 import 'textbox_validate.dart';
-import 'package:app_provider/app_provider.dart';
 
 class InputFieldWithPrefex extends StatefulWidget {
   final TextEditingController controller;
@@ -59,7 +55,6 @@ class _InputFieldWithPrefexState extends State<InputFieldWithPrefex>
     } else {
       expandController.reverse();
     }
-    // currencytxt = currency[0];
   }
 
   @override
