@@ -1,17 +1,17 @@
-import 'package:components/components.dart';
 import 'package:flutter/material.dart';
+import 'package:onyxsio/onyxsio.dart';
 
 class CheckBoxDrop extends StatefulWidget {
   final TextEditingController controller;
   final String title;
   final TXT type;
-  final bool prefex;
+  final String? hint;
   final Function(String)? onOptionSelected;
   const CheckBoxDrop(
       {Key? key,
       required this.type,
       required this.title,
-      this.prefex = true,
+      this.hint,
       this.onOptionSelected,
       required this.controller})
       : super(key: key);
@@ -74,6 +74,7 @@ class _CheckBoxDropState extends State<CheckBoxDrop>
             sizeFactor: animation,
             child: TextBox(
               type: widget.type,
+              hintText: widget.hint,
               controller: widget.controller,
             )),
       ],

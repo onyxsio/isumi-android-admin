@@ -1,3 +1,5 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -190,18 +192,27 @@ class FirestoreRepository {
         rivews: rivews,
         images: photoUrls,
       );
-      productsDB.doc(productId).set(modifiyProduct.toJson());
+      productsDB.doc(productId).set(modifiyProduct.toJson()).then((value) =>
+          DialogBoxes.showAutoCloseDialog(context,
+              type: InfoDialog.successful,
+              message: 'It was successfully uploaded !'));
     } on FirebaseException catch (e) {
       var msg = AppFirebaseFailure.fromCode(e.code);
-      DialogBoxes.showAutoCloseDialog(context, message: msg.message);
+      DialogBoxes.showAutoCloseDialog(context,
+          type: InfoDialog.error, message: msg.message);
       //  DialogBoxes.showAutoCloseDialog(context);
 
     } catch (_) {}
   }
 
 //
-  static Future<String> updateProduct(
-      Product product, List<XFile>? images, List<Variant> variant) async {
+  static Future<void> updateProduct(
+    BuildContext context,
+    Product product,
+    List<XFile>? images,
+    List<Variant> variant,
+    // String discount,
+  ) async {
     List photoUrls = [];
     // Set<String> subv = <String>{};
     List minPrice = [];
@@ -231,14 +242,17 @@ class FirestoreRepository {
         images: photoUrls,
       );
 
-      productsDB.doc(product.sId).update(newProduct.toJson());
-
-      return 'success';
+      productsDB.doc(product.sId).update(newProduct.toJson()).then((value) =>
+          DialogBoxes.showAutoCloseDialog(context,
+              type: InfoDialog.successful,
+              message: 'It was successfully updated !'));
     } on FirebaseException catch (e) {
       var msg = AppFirebaseFailure.fromCode(e.code);
-      return msg.message;
+      DialogBoxes.showAutoCloseDialog(context,
+          type: InfoDialog.error, message: msg.message);
     } catch (_) {
-      return 'An unknown exception occurred.';
+      DialogBoxes.showAutoCloseDialog(context,
+          type: InfoDialog.error, message: 'An unknown exception occurred.');
     }
   }
 
@@ -252,92 +266,16 @@ class FirestoreRepository {
       throw const AppFirebaseFailure();
     }
   }
-
-  // Future<List<Product>> getProducts() async {
-  //   List<Product> productsList = [];
-  //   try {
-  //     await productsDB.get().then((QuerySnapshot querySnapshot) {
-  //       for (var doc in querySnapshot.docs) {
-  //         Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-  //         productsList.add(Product.fromJson(data));
-  //       }
-  //     });
-  //   } on FirebaseException catch (e) {
-  //     throw AppFirebaseFailure.fromCode(e.code);
-  //   } catch (_) {
-  //     throw const AppFirebaseFailure();
-  //   }
-  //   return productsList;
-  // }
-
-  //
-  // getnewOrders() async {
-  //   final Stream<QuerySnapshot> sellerStream = sellerDB.snapshots();
-  //   try {} catch (_) {}
-  // }
-  // static Widget getnewOrders = DashboardInformation();
 }
 
-// class UserInformation extends StatefulWidget {
-//   @override
-//   _UserInformationState createState() => _UserInformationState();
-// }
+// class MyOrder {
+//   final List orders;
+//   MyOrder({required this.orders});
 
-// class _UserInformationState extends State<UserInformation> {
-//   final Stream<QuerySnapshot> _usersStream =
-//       FirebaseFirestore.instance.collection('seller').snapshots();
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return StreamBuilder<QuerySnapshot>(
-//       stream: _usersStream,
-//       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-//         if (snapshot.hasError) {
-//           return Text('Something went wrong');
-//         }
-
-//         if (snapshot.connectionState == ConnectionState.waiting) {
-//           return Text("Loading");
-//         }
-//         // var f1 = snapshot.data!.docs.first.data();
-//         MyOrder f1 = MyOrder.formJson(snapshot.data!.docs.first.data());
-
-//         // return SizedBox();
-//         return ListView.builder(
-//           shrinkWrap: true,
-//           itemCount: f1.orders.length,
-//           itemBuilder: (context, index) {
-//             return Text(f1.orders[index]);
-//           },
-//         );
-//         // return ListView(
-//         //   children: snapshot.data!.docs.map((DocumentSnapshot document) {
-//         //     Map<String, dynamic> data =
-//         //         document.data()! as Map<String, dynamic>;
-//         //     for (var element in data['newOrder']) {
-//         //       return ListTile(
-//         //         title: Text(element),
-//         //       );
-//         //     }
-//         //     return SizedBox(
-//         //         // title: Text(data['newOrder']),
-//         //         // subtitle: Text(data['company']),
-//         //         );
-//         //   }).toList(),
-//         // );
-//       },
-//     );
+//   static MyOrder formJson(data) {
+//     return MyOrder(orders: data['newOrder']);
 //   }
+
+//   Map<String, dynamic> toJson() => {"newOrder": orders};
 // }
-
-class MyOrder {
-  final List orders;
-  MyOrder({required this.orders});
-
-  static MyOrder formJson(data) {
-    return MyOrder(orders: data['newOrder']);
-  }
-
-  Map<String, dynamic> toJson() => {"newOrder": orders};
-}
 //

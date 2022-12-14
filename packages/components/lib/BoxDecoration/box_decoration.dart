@@ -1,5 +1,5 @@
-import 'package:components/BoxDecoration/box_shadow.dart';
-import 'package:components/config/colors.dart';
+import 'package:onyxsio/onyxsio.dart';
+import 'box_shadow.dart';
 import 'package:flutter/material.dart';
 
 class BoxDeco {

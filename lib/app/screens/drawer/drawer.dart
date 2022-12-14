@@ -74,22 +74,22 @@ class MyDrawer extends StatelessWidget {
                   DrawerButton(
                       text: 'Scan to review',
                       onTap: () {
-                        Navigator.pushNamed(context, '/ScanToReview');
+                        // Navigator.pushNamed(context, '/ScanToReview');
                       }),
                   DrawerButton(
                       text: 'Wishlist',
                       onTap: () {
-                        Navigator.pushNamed(context, '/WishListPage');
+                        // Navigator.pushNamed(context, '/WishListPage');
                       }),
                   DrawerButton(
                       text: 'Settings',
                       onTap: () {
-                        Navigator.pushNamed(context, '/SettingsPage');
+                        // Navigator.pushNamed(context, '/SettingsPage');
                       }),
                   DrawerButton(
                       text: 'Notification',
                       onTap: () {
-                        Navigator.pushNamed(context, '/NotificationPage');
+                        // Navigator.pushNamed(context, '/NotificationPage');
                       }),
                   const Spacer(flex: 1),
                   Container(
@@ -101,20 +101,20 @@ class MyDrawer extends StatelessWidget {
                   DrawerButton(
                       text: 'About',
                       onTap: () {
-                        Navigator.pushNamed(context, '/SupportPage',
-                            arguments: 'about');
+                        // Navigator.pushNamed(context, '/SupportPage',
+                        //     arguments: 'about');
                       }),
                   DrawerButton(
                       text: 'Help & Support ',
                       onTap: () {
-                        Navigator.pushNamed(context, '/SupportPage',
-                            arguments: 'help');
+                        // Navigator.pushNamed(context, '/SupportPage',
+                        //     arguments: 'help');
                       }),
                   DrawerButton(
                       text: 'Terms & conditions ',
                       onTap: () {
-                        Navigator.pushNamed(context, '/SupportPage',
-                            arguments: 'terms');
+                        // Navigator.pushNamed(context, '/SupportPage',
+                        // arguments: 'terms');
                       }),
                   const Spacer(flex: 2),
                   InkWell(
@@ -124,6 +124,7 @@ class MyDrawer extends StatelessWidget {
                     child: Row(
                       children: [
                         SvgPicture.asset(AppIcon.logout),
+                        SizedBox(width: 5.w),
                         const Text("Logout"),
                       ],
                     ),

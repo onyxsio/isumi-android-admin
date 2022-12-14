@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:onyxsio/onyxsio.dart';
 
 class Product {
   String? sId;

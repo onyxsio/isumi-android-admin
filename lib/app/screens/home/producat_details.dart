@@ -47,6 +47,10 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
     var space = SizedBox(height: 4.w);
     bool hasOffer = (widget.product.offers != null &&
         widget.product.offers!.percentage!.isNotEmpty);
+
+    bool hasDiscount = (widget.product.price!.discount != null &&
+        widget.product.price!.discount!.isNotEmpty);
+
     return Scaffold(
       appBar: secondaryAppBar(),
       body: SingleChildScrollView(
@@ -71,7 +75,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  priceTag(hasOffer),
+                  priceTag(hasOffer, hasDiscount),
                   space,
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -218,15 +222,15 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
     );
   }
 
-  Widget priceTag(hasOffer) {
+  Widget priceTag(hasOffer, hasDiscount) {
     return Row(
       children: [
-        Text(
-            Utils.currency(
-                name: widget.product.price!.currency,
-                amount: double.parse(price)),
-            style: TxtStyle.price),
-        Space.x5,
+        if (!hasOffer && !hasDiscount)
+          Text(
+              Utils.currency(
+                  name: widget.product.price!.currency,
+                  amount: double.parse(price)),
+              style: TxtStyle.price),
         if (hasOffer)
           Row(
             children: [
@@ -236,10 +240,38 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                     amount: price,
                     offer: widget.product.offers!.percentage,
                   ),
+                  style: TxtStyle.price),
+              Space.x5,
+              Text(
+                  Utils.currency(
+                      name: widget.product.price!.currency,
+                      amount: double.parse(price)),
                   style: TxtStyle.currency
                       .copyWith(decoration: TextDecoration.lineThrough)),
               Space.x3,
               Text('-${widget.product.offers!.percentage}%',
+                  style: TxtStyle.settinSubTitle),
+            ],
+          ),
+        if (hasDiscount)
+          Row(
+            children: [
+              Text(
+                  Utils.offerCal(
+                    name: widget.product.price!.currency,
+                    amount: price,
+                    offer: widget.product.price!.discount,
+                  ),
+                  style: TxtStyle.price),
+              Space.x5,
+              Text(
+                  Utils.currency(
+                      name: widget.product.price!.currency,
+                      amount: double.parse(price)),
+                  style: TxtStyle.currency
+                      .copyWith(decoration: TextDecoration.lineThrough)),
+              Space.x3,
+              Text('-${widget.product.price!.discount}%',
                   style: TxtStyle.settinSubTitle),
             ],
           ),

@@ -4,6 +4,7 @@ import 'package:isumi/core/utils/utils.dart';
 import 'package:onyxsio/onyxsio.dart';
 
 import 'producat_add_veriant.dart';
+import 'widget/package_details.dart';
 
 class ProductAddPage extends StatefulWidget {
   const ProductAddPage({Key? key}) : super(key: key);
@@ -15,10 +16,7 @@ class ProductAddPage extends StatefulWidget {
 class _ProductAddPageState extends State<ProductAddPage> {
   // Create Text Editing Controller
   var pName = TextEditingController();
-  var pPrice = TextEditingController();
-  var pQuantity = TextEditingController();
   var pDescription = TextEditingController();
-  var pDiscount = TextEditingController();
   var pDelivery = TextEditingController();
   var pDays = TextEditingController();
 
@@ -27,19 +25,21 @@ class _ProductAddPageState extends State<ProductAddPage> {
   String pickerColor = '0xffFF7B2C';
   String currentColor = '0xffFF7B2C';
   // Create Option Item List
-  String productSize = '', pCurrency = '', category = '', pType = '';
+  // String productSize = '', pCurrency = '', category = '', pType = '';
   double lastPrice = 0.0;
   // Create image Picker
   final ImagePicker imagePicker = ImagePicker();
   // Create List for XFile image
   List<XFile>? imageFileList = [];
   List<Variant> productVariantList = [];
-  // var map2 = {};
-  // var map1 = [];
-  // var seen = Set();
+  Package package = Package();
   // ValueChanged<Color> callback
   void changeColor(Color color) {
     setState(() => pickerColor = color.value.toString());
+  }
+
+  void getPackageDetails(Package value) {
+    setState(() => package = value);
   }
 
   void getSubVariant() async {
@@ -69,9 +69,17 @@ class _ProductAddPageState extends State<ProductAddPage> {
           children: [
             SizedBox(height: 5.w),
             TXTHeader.header2("Product name"),
-            TextBox(type: TXT.name, controller: pName),
+            TextBox(
+              type: TXT.name,
+              controller: pName,
+              hintText: 'Enter an item name',
+            ),
             TXTHeader.header2("Product description"),
-            TextBox(type: TXT.description, controller: pDescription),
+            TextBox(
+              type: TXT.description,
+              controller: pDescription,
+              hintText: 'Enter an item description',
+            ),
             TXTHeader.header2("Product images"),
             SizedBox(height: 5.w),
             if (imageFileList!.isNotEmpty) _buildImageGrid(),
@@ -90,45 +98,20 @@ class _ProductAddPageState extends State<ProductAddPage> {
                 onTap: getSubVariant,
                 image: AppIcon.dress,
                 text: 'Product Variants'),
-            SizedBox(height: 5.w),
-            CheckBoxDrop(
-              type: TXT.discountPrice,
-              controller: pDiscount,
-              onOptionSelected: (optionItem) {
-                setState(() => pCurrency = optionItem);
-              },
-              title: 'Is there a price reduction?',
-            ),
+            SizedBox(height: 10.w),
+            PackageDetails(packageFun: getPackageDetails),
             CheckBoxDrop(
               type: TXT.deliveryPrice,
               controller: pDelivery,
-              onOptionSelected: (optionItem) {
-                setState(() => pCurrency = optionItem);
-              },
-              title: 'Is there free delivery?',
+              hint: 'Delivery charge',
+              title: 'Is there a delivery charge?',
             ),
             CheckBoxDrop(
               type: TXT.returnDays,
               controller: pDays,
-              prefex: false,
+              hint: 'Number of days a return is valid',
               title: 'Is there a return?',
             ),
-            SizedBox(height: 5.w),
-            // SelectDropList(
-            //   (optionItem) {
-            //     setState(() => category = optionItem);
-            //   },
-            //   categoryGender,
-            //   title: "Select Product Category",
-            // ),
-            SizedBox(height: 5.w),
-            // SelectDropList(
-            //   (optionItem) {
-            //     setState(() => pType = optionItem);
-            //   },
-            //   categoryGarment,
-            //   title: "Select Product Type",
-            // ),
             SizedBox(height: 5.w),
             MainButton(
                 onTap: () {
@@ -151,7 +134,6 @@ class _ProductAddPageState extends State<ProductAddPage> {
   }
 
   bool isAllNotempty() {
-    // print(pType.isEmpty);
     if (productVariantList.isEmpty || imageFileList == null) {
       return false;
     } else {
@@ -165,28 +147,22 @@ class _ProductAddPageState extends State<ProductAddPage> {
         title: pName.text,
         description: pDescription.text,
         variant: productVariantList,
-        // images: imageFileList!,
-        // delivery: pDelivery.text,
-        // returnDays: pDays.text,
-        // discount: pDiscount.text,
-        // category: category,
-        // type: pType,
-        // price: lastPrice,
-        // details: seen.toList(),
-        // currency: pCurrency
+        shipping: Shipping(
+          deliveryPrice: pDelivery.text,
+          returnDays: pDays.text,
+        ),
+        package: package,
       );
 
-      await FirestoreRepository.addProduct(context, product, imageFileList);
-      // if (resulte == 'success') {
-      // showAutoCloseDialog(context, 'success', 'done');
-      // Navigator.of(context).pushNamedAndRemoveUntil(
-      //   '/MainPage',
-      //   (route) => false,
-      // );
-      // Navigator.pop(context);
-      // }
+      await FirestoreRepository.addProduct(context, product, imageFileList)
+          .then((value) {
+        Navigator.of(context).pushNamedAndRemoveUntil(
+          '/MainPage',
+          (route) => false,
+        );
+      });
     } else {
-      // showAutoCloseDialog(context, 'something went wrong', 'error');
+      // TODO
     }
   }
 
