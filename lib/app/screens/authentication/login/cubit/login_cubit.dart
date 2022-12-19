@@ -18,6 +18,7 @@ class LoginCubit extends Cubit<LoginState> {
 
   void passwordChanged(String value) {
     final password = Password.dirty(value);
+
     emit(
       state.copyWith(
         password: password,
@@ -28,6 +29,7 @@ class LoginCubit extends Cubit<LoginState> {
 
   Future<void> logInWithCredentials() async {
     if (!state.status.isValidated) return;
+
     emit(state.copyWith(status: FormzStatus.submissionInProgress));
 
     try {
@@ -36,6 +38,23 @@ class LoginCubit extends Cubit<LoginState> {
         password: state.password.value,
       );
 
+      emit(state.copyWith(status: FormzStatus.submissionSuccess));
+    } on AppFirebaseFailure catch (e) {
+      emit(
+        state.copyWith(
+          errorMessage: e.message,
+          status: FormzStatus.submissionFailure,
+        ),
+      );
+    } catch (_) {
+      emit(state.copyWith(status: FormzStatus.submissionFailure));
+    }
+  }
+
+  Future<void> logInWithGoogle() async {
+    emit(state.copyWith(status: FormzStatus.submissionInProgress));
+    try {
+      await _authRepo.logInWithGoogle();
       emit(state.copyWith(status: FormzStatus.submissionSuccess));
     } on AppFirebaseFailure catch (e) {
       emit(

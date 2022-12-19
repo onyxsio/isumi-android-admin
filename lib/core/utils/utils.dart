@@ -37,6 +37,7 @@ class AppIcon {
   static const String message = 'assets/icons/message.svg';
 
   static const String dress = 'assets/icons/dress.svg';
+  static const String google = 'assets/icons/google.svg';
 }
 //
 

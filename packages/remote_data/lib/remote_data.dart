@@ -11,4 +11,3 @@ export 'package:firebase_messaging/firebase_messaging.dart';
 export 'src/widget/dashboard.dart';
 export 'src/widget/orders.dart';
 export 'src/widget/delivered.dart';
-export 'package:uuid/uuid.dart';

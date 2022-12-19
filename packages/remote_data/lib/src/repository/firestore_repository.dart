@@ -1,5 +1,5 @@
 // ignore_for_file: depend_on_referenced_packages
-
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -19,7 +19,7 @@ class FirestoreRepository {
   // Cerate instance of products Database
   static var productsDB = firestore.collection('products');
 // Cerate instance of products Database
-  static var sellerDB = firestore.collection('seller');
+  static var sellerDB = firestore.collection('sellers');
   // Stream<QuerySnapshot>
   static var productStream = productsDB.snapshots();
   static var offerDB = firestore.collection('offers');
@@ -27,21 +27,35 @@ class FirestoreRepository {
   // Stream<QuerySnapshot>
   // static var orderStream = sellerDB.doc('order').snapshots();
   //
+
+  static Future<void> createAccount(auth.User user) async {
+    try {
+      String? deviceToken = await FirebaseMessaging.instance.getToken();
+      await sellerDB.doc(user.uid).set(demoSeller
+          .copyWith(
+            email: user.email,
+            sId: user.uid,
+            deviceToken: deviceToken,
+          )
+          .toJson());
+      // sellerDB.doc(user.uid).collection('orders');
+      // sellerDB.doc(user.uid).collection('products');
+    } on FirebaseException catch (e) {
+      AppFirebaseFailure.fromCode(e.code);
+      log(e.code);
+    } catch (e) {
+      log('e: $e');
+    }
+  }
+
   Future<void> setupDeviceToken() async {
+    final user = auth.FirebaseAuth.instance.currentUser;
     String? deviceToken = await FirebaseMessaging.instance.getToken();
     // Dashboard dashboard = Dashboard();
     try {
-      sellerDB
-          .doc('admin_data')
-          .get()
-          .then((DocumentSnapshot documentSnapshot) {
+      sellerDB.doc(user!.uid).get().then((DocumentSnapshot documentSnapshot) {
         if (documentSnapshot.exists) {
-          sellerDB.doc('admin_data').update({'deviceToken': deviceToken});
-        } else {
-          sellerDB.doc('admin_data').set({'deviceToken': deviceToken});
-          sellerDB.doc('overview').set(emptyDash.toJson());
-          sellerDB.doc('overview').collection('orders');
-          // sellerDB.doc('order').set({'orders': []});
+          sellerDB.doc(user.uid).update({'deviceToken': deviceToken});
         }
       });
     } catch (_) {}
@@ -144,7 +158,7 @@ class FirestoreRepository {
 
 // !
   //
-  Future<void> setupDashboard(Dashboard dashboard) async {
+  Future<void> setupDashboard(Seller dashboard) async {
     try {
       sellerDB.doc('overview').get().then((DocumentSnapshot documentSnapshot) {
         if (!documentSnapshot.exists) {
@@ -161,6 +175,7 @@ class FirestoreRepository {
       BuildContext context, Product product, List<XFile>? images) async {
     // Store Multiple Images urls
     List<String> photoUrls = [];
+    final user = auth.FirebaseAuth.instance.currentUser;
     // Set<String> subv = <String>{};
     List minPrice = [];
     // Store sinlgel Images urls
@@ -187,19 +202,21 @@ class FirestoreRepository {
       photoUrls = await StorageRepository().uploadFiles(images!, productId);
       var modifiyProduct = product.copyWith(
         sId: productId,
+        sellerId: user!.uid,
         thumbnail: photoUrls[0],
         price: price,
         rivews: rivews,
         images: photoUrls,
       );
-      productsDB.doc(productId).set(modifiyProduct.toJson()).then((value) =>
-          DialogBoxes.showAutoCloseDialog(context,
-              type: InfoDialog.successful,
-              message: 'It was successfully uploaded !'));
+      productsDB.doc(productId).set(modifiyProduct.toJson());
+      // .then((value) =>
+      // DialogBoxes.showAutoCloseDialog(context,
+      //     type: InfoDialog.successful,
+      //     message: 'It was successfully uploaded !'));
     } on FirebaseException catch (e) {
       var msg = AppFirebaseFailure.fromCode(e.code);
-      DialogBoxes.showAutoCloseDialog(context,
-          type: InfoDialog.error, message: msg.message);
+      // DialogBoxes.showAutoCloseDialog(context,
+      //     type: InfoDialog.error, message: msg.message);
       //  DialogBoxes.showAutoCloseDialog(context);
 
     } catch (_) {}
@@ -242,14 +259,15 @@ class FirestoreRepository {
         images: photoUrls,
       );
 
-      productsDB.doc(product.sId).update(newProduct.toJson()).then((value) =>
-          DialogBoxes.showAutoCloseDialog(context,
-              type: InfoDialog.successful,
-              message: 'It was successfully updated !'));
+      productsDB.doc(product.sId).update(newProduct.toJson());
+      // .then((value) =>
+      //     DialogBoxes.showAutoCloseDialog(context,
+      //         type: InfoDialog.successful,
+      //         message: 'It was successfully updated !'));
     } on FirebaseException catch (e) {
       var msg = AppFirebaseFailure.fromCode(e.code);
-      DialogBoxes.showAutoCloseDialog(context,
-          type: InfoDialog.error, message: msg.message);
+      // DialogBoxes.showAutoCloseDialog(context,
+      //     type: InfoDialog.error, message: msg.message);
     } catch (_) {
       DialogBoxes.showAutoCloseDialog(context,
           type: InfoDialog.error, message: 'An unknown exception occurred.');

@@ -20,6 +20,5 @@ export 'package:components/widgets/Qr/pdf_invoice_api.dart';
 export 'package:components/widgets/Qr/file_handle_api.dart';
 export 'package:intl/intl.dart';
 export 'util/space.dart';
-export 'package:components/animations/shimmer_loading.dart';
-export 'package:components/animations/shimmer.dart';
+
 export 'package:components/custom/curruncy.dart';
