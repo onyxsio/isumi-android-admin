@@ -39,7 +39,7 @@ class FirestoreRepository {
           )
           .toJson());
       // sellerDB.doc(user.uid).collection('orders');
-      // sellerDB.doc(user.uid).collection('products');
+      // s
     } on FirebaseException catch (e) {
       AppFirebaseFailure.fromCode(e.code);
       log(e.code);
@@ -208,7 +208,12 @@ class FirestoreRepository {
         rivews: rivews,
         images: photoUrls,
       );
-      productsDB.doc(productId).set(modifiyProduct.toJson());
+      await productsDB.doc(productId).set(modifiyProduct.toJson());
+      await sellerDB
+          .doc(user.uid)
+          .collection('products')
+          .doc(productId)
+          .set(modifiyProduct.toJson());
       // .then((value) =>
       // DialogBoxes.showAutoCloseDialog(context,
       //     type: InfoDialog.successful,
