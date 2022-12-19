@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:isumi/core/utils/utils.dart';
 import 'package:onyxsio/onyxsio.dart';
 import 'cubit/login_cubit.dart';
+
+TextEditingController email = TextEditingController();
+TextEditingController password = TextEditingController();
 
 class LoginForm extends StatelessWidget {
   const LoginForm({super.key});
@@ -10,6 +14,9 @@ class LoginForm extends StatelessWidget {
     return BlocListener<LoginCubit, LoginState>(
       listener: (context, state) {
         if (state.status.isSubmissionFailure) {
+          // AppMessenger.showSnackBar(
+          //     context: context,
+          //     message: state.errorMessage ?? 'Authentication Failure');
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
@@ -25,32 +32,32 @@ class LoginForm extends StatelessWidget {
           physics: const BouncingScrollPhysics(),
           child: Column(
             mainAxisSize: MainAxisSize.min,
+            // crossAxisAlignment: CrossAxisAlignment.center,
+            // mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                'Let’s Get Started 😁',
-                style: TxtStyle.h14B,
-              ),
+              SizedBox(height: 5.w),
+              Text('Let’s Get Started 😁', style: TxtStyle.h14B),
               SizedBox(height: 5.w),
               Text(
                 "Sign up or login in to sell more products",
                 textAlign: TextAlign.center,
                 style: TxtStyle.b5,
               ),
-              SizedBox(height: 20.w),
+              SizedBox(height: 10.w),
               // _EmailInput(),
               TextBox(
                 controller: email,
                 type: TXT.email,
                 hintText: 'email',
               ),
-              SizedBox(height: 6.w),
+              // SizedBox(height: 2.w),
               // _PasswordInput(),
               TextBox(
                 controller: password,
                 type: TXT.password,
                 hintText: 'password',
               ),
-              SizedBox(height: 6.w),
+              // SizedBox(height: 6.w),
               Row(
                 children: [
                   const Spacer(),
@@ -65,19 +72,20 @@ class LoginForm extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 20.w),
+              SizedBox(height: 10.w),
               _LoginButton(),
               SizedBox(height: 6.w),
-              // Row(
-              //   children: const [
-              //     Expanded(child: Divider(thickness: 2)),
-              //     SizedBox(width: 10),
-              //     Text(' OR '),
-              //     SizedBox(width: 10),
-              //     Expanded(child: Divider(thickness: 2)),
-              //   ],
-              // ),
-              // const SizedBox(height: 12),
+              Row(
+                children: const [
+                  Expanded(child: Divider(thickness: 2)),
+                  SizedBox(width: 10),
+                  Text(' OR '),
+                  SizedBox(width: 10),
+                  Expanded(child: Divider(thickness: 2)),
+                ],
+              ),
+              const SizedBox(height: 12),
+              _GoogleLoginButton(),
               // const SizedBox(height: 12),
               _SignUpButton(),
             ],
@@ -87,9 +95,6 @@ class LoginForm extends StatelessWidget {
     );
   }
 }
-
-TextEditingController email = TextEditingController();
-TextEditingController password = TextEditingController();
 
 // class _EmailInput extends StatelessWidget {
 //   @override
@@ -176,90 +181,53 @@ class _LoginButton extends StatelessWidget {
       buildWhen: (previous, current) => previous.status != current.status,
       builder: (context, state) {
         return state.status.isSubmissionInProgress
-            ? const CircularProgressIndicator()
+            ? const HRDots()
             : MainButton(
                 onTap: () {
                   context.read<LoginCubit>().emailChanged(email.text);
                   context.read<LoginCubit>().passwordChanged(password.text);
-                  //       // if (state.status.isValidated) {
-
                   context.read<LoginCubit>().logInWithCredentials();
-                  //
                 },
                 text: 'Get Started');
-        // : InkWell(
-        //     onTap: () {
-        //       context.read<LoginCubit>().emailChanged(email.text);
-        //       context.read<LoginCubit>().passwordChanged(password.text);
-        //       // if (state.status.i@gmail@sValidated) {
-
-        //       context.read<LoginCubit>().logInWithCredentials();
-        //       // }
-        //     },
-        //     child: Container(
-        //         height: 54,
-        //         padding: const EdgeInsets.symmetric(horizontal: 20),
-        //         decoration: BoxDecoration(
-        //           color: Colors.blue,
-        //           borderRadius: BorderRadius.circular(16),
-        //         ),
-        //         child: Center(
-        //             child: Text(
-        //           'Get Started',
-        //           // style: TextStyles.btnB.copyWith(color: whiteColor),
-        //         ))),
-        //   );
       },
     );
   }
 }
 
-// class _GoogleLoginButton extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     final theme = Theme.of(context);
-//     return InkWell(
-//       key: const Key('loginForm_googleLogin_raisedButton'),
-//       child: Container(
-//         height: 54,
-//         padding: const EdgeInsets.symmetric(horizontal: 20),
-//         decoration: BoxDecoration(
-//           color: whiteColor,
-//           border: Border.all(width: 1, color: theme.btnBorderColor),
-//           borderRadius: BorderRadius.circular(16),
-//         ),
-//         child: Center(
-//           child: Row(
-//             mainAxisAlignment: MainAxisAlignment.center,
-//             children: [
-// SvgPicture.asset(
-//   AppIcon.google,
-//   height: 30,
-// ),
-//               const SizedBox(width: 12),
-//               Text(
-//                 'Continue with Gmail',
-//                 style: TextStyles.btn,
-//               ),
-//             ],
-//           ),
-//         ),
-//       ),
-
-//       // onTap: () => context.read<LoginCubit>().logInWithFacebook(),
-//       onTap: () => context.read<LoginCubit>().logInWithGoogle(),
-//     );
-//   }
-// }
+class _GoogleLoginButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      key: const Key('loginForm_googleLogin_raisedButton'),
+      child: Container(
+        height: 54,
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        decoration: BoxDeco.itemSizeCard,
+        child: Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SvgPicture.asset(AppIcon.google, height: 30),
+              const SizedBox(width: 12),
+              Text(
+                'Continue with Gmail',
+                style: TxtStyle.b6,
+              ),
+            ],
+          ),
+        ),
+      ),
+      onTap: () => context.read<LoginCubit>().logInWithGoogle(),
+    );
+  }
+}
 
 class _SignUpButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // final theme = Theme.of(context);
     return TextButton(
       key: const Key('loginForm_createAccount'),
-      onPressed: () => Navigator.of(context)
-          .pushNamedAndRemoveUntil('/SignUpPage', (route) => false),
+      onPressed: () => Navigator.of(context).pushNamed('/SignUpPage'),
       child: RichText(
         text: TextSpan(children: [
           TextSpan(

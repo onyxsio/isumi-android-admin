@@ -1,4 +1,4 @@
 export 'product.dart';
 export 'admin.dart';
-export 'dashboard.dart';
+export 'seller.dart';
 export 'order.dart';

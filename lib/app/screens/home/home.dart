@@ -60,7 +60,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget getDataFrom(Dashboard data) {
+  Widget getDataFrom(Seller data) {
     return ValueListenableBuilder<Box>(
         valueListenable: LocalDB.sellerBox.listenable(),
         builder: (context, box, widget) {

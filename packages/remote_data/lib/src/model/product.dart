@@ -2,6 +2,7 @@ import 'package:onyxsio/onyxsio.dart';
 
 class Product {
   String? sId;
+  String? sellerId;
   String? title;
   String? qrCode;
   String? description;
@@ -24,6 +25,7 @@ class Product {
 
   Product({
     this.sId,
+    this.sellerId,
     this.title,
     this.description,
     this.productCategory,
@@ -46,6 +48,7 @@ class Product {
 
   Product copyWith({
     String? sId,
+    String? sellerId,
     String? title,
     String? description,
     String? qrCode,
@@ -67,6 +70,7 @@ class Product {
   }) {
     return Product(
       sId: sId ?? this.sId,
+      sellerId: sellerId ?? this.sellerId,
       title: title ?? this.title,
       qrCode: qrCode ?? this.qrCode,
       description: description ?? this.description,
@@ -92,6 +96,7 @@ class Product {
   Product.fromSnap(DocumentSnapshot snap) {
     Map<String, dynamic> json = snap.data() as Map<String, dynamic>;
     sId = json['_id'];
+    sellerId = json['sellerId'];
     title = json['title'];
     qrCode = json['qrCode'];
     description = json['description'];
@@ -138,6 +143,7 @@ class Product {
 //
   Product.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
+    sellerId = json['sellerId'];
     title = json['title'];
     qrCode = json['qrCode'];
     description = json['description'];
@@ -184,6 +190,7 @@ class Product {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['_id'] = sId;
+    data['sellerId'] = sellerId;
     data['title'] = title;
     data['qrCode'] = qrCode;
     data['description'] = description;

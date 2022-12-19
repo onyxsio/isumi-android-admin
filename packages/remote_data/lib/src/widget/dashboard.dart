@@ -4,7 +4,7 @@ import 'package:remote_data/src/model/models.dart';
 
 class DashboardInformation extends StatelessWidget {
   // final Widget child; //Dashboard,
-  final Widget Function(Dashboard) child;
+  final Widget Function(Seller) child;
   const DashboardInformation({Key? key, required this.child}) : super(key: key);
 
   @override
@@ -23,7 +23,7 @@ class DashboardInformation extends StatelessWidget {
           return const CupertinoActivityIndicator();
         }
         // var f1 = snapshot.data!.docs.first.data();
-        Dashboard f1 = Dashboard.fromJsonFirebase(snapshot.data);
+        Seller f1 = Seller.fromJsonFirebase(snapshot.data);
 
         return child.call(f1);
       },
