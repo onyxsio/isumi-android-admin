@@ -9,7 +9,7 @@ packages:
     source: hosted
     version: "1.0.10"
   app_provider:
-    dependency: transitive
+    dependency: "direct main"
     description:
       path: "../provider"
       relative: true
@@ -126,7 +126,7 @@ packages:
       name: cloud_firestore_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.9.1"
+    version: "5.9.2"
   cloud_firestore_web:
     dependency: transitive
     description:
@@ -498,7 +498,7 @@ packages:
       name: image_picker_ios
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.8.6+2"
+    version: "0.8.6+3"
   image_picker_platform_interface:
     dependency: transitive
     description:

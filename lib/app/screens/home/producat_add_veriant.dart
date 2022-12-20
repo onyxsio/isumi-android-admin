@@ -119,7 +119,7 @@ class _ProductVeriantAddPageState extends State<ProductVeriantAddPage> {
         borderRadius: BorderRadius.circular(16),
       ),
       child: ValueListenableBuilder<Box>(
-          valueListenable: LocalDB.box.listenable(),
+          valueListenable: HiveDB.box.listenable(),
           builder: (context, box, widget) {
             var currency = box.get('currency');
             return Column(

@@ -12,7 +12,7 @@ class TestDataOrder extends StatelessWidget {
         child: TextButton(
           child: const Text('Set data to Order Db'),
           onPressed: () {
-            FirestoreRepository.setupOrder();
+            // FirestoreRepository.setupOrder();
           },
         ),
       ),

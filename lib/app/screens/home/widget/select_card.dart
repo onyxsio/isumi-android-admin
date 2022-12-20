@@ -156,12 +156,11 @@ class _SelectedCardState extends State<SelectedCard> {
           text: TextSpan(
         children: [
           TextSpan(
-              text: Utils.formatCurrencySymble(
-                  name: widget.product.price!.currency),
+              text: Utils.currencySymble(name: widget.product.price!.currency),
               style: TxtStyle.itemCardcurrency),
           const TextSpan(text: ' '),
           TextSpan(
-              text: Utils.formatCurrency(
+              text: Utils.value(
                   name: widget.product.price!.currency,
                   amount: double.parse(widget.product.price!.value!)),
               style: TxtStyle.itemCardPrice),
