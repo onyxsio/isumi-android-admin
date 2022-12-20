@@ -1,39 +1,28 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'dart:io';
 import 'dart:ui';
 import 'package:barcode/barcode.dart';
 import 'package:components/components.dart';
 import 'package:components/util/util.dart';
 import 'package:flutter/services.dart';
+import 'package:onyxsio/onyxsio.dart' as o;
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:remote_data/remote_data.dart';
-
 import 'uniq_id.dart';
 
 class PdfInvoiceApi {
-  static Future<File> generate(Orders order) async {
-    String totalQuantity(List<Variants> variants) {
-      int quantity = 0;
-      for (var variant in variants) {
-        for (var subvariant in variant.subvariants!) {
-          quantity += int.parse(subvariant.qty!);
-        }
-      }
-      return quantity.toString();
+  static Future<File> generate(Orders order, o.Admin seller) async {
+    String totalPrice(Items item) {
+      return Utils.currency(
+          amount: (int.parse(item.quantity!) * double.parse(item.price!)),
+          name: item.currency);
     }
 
-    String totalPrice(List<Variants> variants) {
-      double price = 0;
-      for (var variant in variants) {
-        for (var subvariant in variant.subvariants!) {
-          price += double.parse(subvariant.qty!);
-        }
-      }
-      if (order.currency == '¥') {
-        return price.toStringAsFixed(0);
-      } else {
-        return price.toString();
-      }
+    String unitPrice(Items item) {
+      return Utils.currency(
+          amount: double.parse(item.price!), name: item.currency);
     }
 
     final pdf = pw.Document();
@@ -54,7 +43,7 @@ class PdfInvoiceApi {
     final tableHeaders = [
       'No',
       'Description',
-      // 'Unit Price',
+      'Unit Price',
       'Quantity',
       'Total',
     ];
@@ -64,8 +53,9 @@ class PdfInvoiceApi {
         [
           '${i + 1}',
           order.items![i].name!,
-          totalQuantity(order.items![i].variants!),
-          '${order.currency!} ${totalPrice(order.items![i].variants!)}',
+          unitPrice(order.items![i]),
+          order.items![i].quantity!,
+          totalPrice(order.items![i]),
         ]
     ];
 
@@ -82,14 +72,14 @@ class PdfInvoiceApi {
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
                     pw.Text(
-                      'Store Name',
+                      seller.name,
                       style: pw.TextStyle(
                         fontSize: 12.sp,
                         fontWeight: pw.FontWeight.bold,
                       ),
                     ),
                     pw.Text(
-                      'Flutter Approach',
+                      seller.slogan,
                       style: pw.TextStyle(
                         fontSize: 8.sp,
                         color: PdfColors.grey700,
@@ -199,7 +189,7 @@ class PdfInvoiceApi {
                           ),
                           pw.SizedBox(height: 1.w),
                           pw.Text(
-                            Utils.formatDate(DateTime.now()),
+                            Utils.date(DateTime.now().toString()),
                             style: pw.TextStyle(fontSize: 10.sp),
                           ),
                         ],
@@ -229,7 +219,7 @@ class PdfInvoiceApi {
                 1: pw.Alignment.centerLeft,
                 2: pw.Alignment.centerRight,
                 3: pw.Alignment.center,
-                // 4: pw.Alignment.centerRight,
+                4: pw.Alignment.centerRight,
               },
             ),
             // pw.Divider(),
@@ -277,7 +267,7 @@ class PdfInvoiceApi {
                                 // mainAxisAlignment: pw.MainAxisAlignment.end,
                                 children: [
                                   pw.Text(
-                                    order.currency!,
+                                    Utils.symble(name: order.currency!),
                                     style: pw.TextStyle(fontSize: 9.sp),
                                   ),
                                   pw.SizedBox(width: 1.w),
@@ -335,7 +325,7 @@ class PdfInvoiceApi {
                           crossAxisAlignment: pw.CrossAxisAlignment.end,
                           children: [
                             pw.Text(
-                              order.currency!,
+                              Utils.symble(name: order.currency!),
                               style: pw.TextStyle(fontSize: 12.sp),
                             ),
                             pw.SizedBox(width: 1.w),
@@ -365,14 +355,7 @@ class PdfInvoiceApi {
                   ),
                 ),
                 pw.SizedBox(width: 10.w),
-                //
-                //  buildBarcode(
-                // Barcode.qrCode().toSvg('sudesh bandara'),
-                // pw.Image(pw.Barcode.fromType(type)), billQrCode
-                // )
-                // TODO
-                // pw.Image(pw.MemoryImage(iconQr), width: 15.w, height: 15.w),
-                pw.Image(pw.MemoryImage(filename), width: 15.w, height: 15.w),
+                pw.Image(pw.MemoryImage(filename), width: 18.w, height: 18.w),
               ],
             ),
             pw.SizedBox(height: 1.h),
@@ -389,11 +372,11 @@ class PdfInvoiceApi {
                 mainAxisAlignment: pw.MainAxisAlignment.spaceAround,
                 children: [
                   pw.Text(
-                    '+9430298952',
+                    seller.phone,
                     style: pw.TextStyle(fontSize: 10.sp),
                   ),
                   pw.Text(
-                    'ShopEmail@gmail.com',
+                    seller.email,
                     style: pw.TextStyle(fontSize: 10.sp),
                   ),
                 ],

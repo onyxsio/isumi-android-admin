@@ -8,7 +8,7 @@ import 'package:onyxsio/onyxsio.dart';
 
 class AppImage {
   static const String logo = 'assets/images/logo.png';
-  static const String demoQrcode = 'assets/images/qrcode.png';
+  static const String demoQrcode = 'assets/images/isumi.png';
 }
 
 class AppIcon {
@@ -56,10 +56,10 @@ class Utils {
   static formatDateTime(DateTime date) =>
       DateFormat('yyyy-M-d hh:mm:ss').format(date);
 
-  static formatCurrencySymble({name}) =>
+  static currencySymble({name}) =>
       NumberFormat.simpleCurrency(name: name).currencySymbol;
 
-  static formatCurrency({name, amount}) => CurrencyFormat.simpleCurrency(
+  static value({name, amount}) => CurrencyFormat.simpleCurrency(
         locale: Platform.localeName,
         name: name,
         customPattern: '#,###', //\u00a4

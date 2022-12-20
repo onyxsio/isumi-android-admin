@@ -1,18 +1,18 @@
-enum ResultStatus {
-  successful,
-  invalid,
-  undefined,
-}
+// enum ResultStatus {
+//   successful,
+//   invalid,
+//   undefined,
+// }
 
-class Failure {
-  // Use something like "int code;" if you want to translate error messages
-  final String message;
+// class Failure {
+//   // Use something like "int code;" if you want to translate error messages
+//   final String message;
 
-  Failure(this.message);
+//   Failure(this.message);
 
-  @override
-  String toString() => message;
-}
+//   @override
+//   String toString() => message;
+// }
 
 //   static handleException(e) {
 //     ResultStatus status;

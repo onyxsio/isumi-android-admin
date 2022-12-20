@@ -36,7 +36,7 @@ class _SettingsPageState extends State<SettingsPage> {
         padding: EdgeInsets.symmetric(horizontal: 5.w).copyWith(top: 5.w),
         physics: const BouncingScrollPhysics(),
         child: ValueListenableBuilder<Box>(
-            valueListenable: LocalDB.box.listenable(),
+            valueListenable: HiveDB.box.listenable(),
             builder: (context, box, widget) {
               var currency = box.get('currency');
               return Column(
@@ -138,7 +138,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     (optionItem) {
                       setState(() {
                         currency = optionItem;
-                        LocalDB.setCurrency(data: optionItem);
+                        HiveDB.setCurrency(data: optionItem);
                       });
                       // getLocalData();
                     },

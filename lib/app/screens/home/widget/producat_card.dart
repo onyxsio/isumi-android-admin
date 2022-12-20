@@ -117,11 +117,11 @@ class GridProductCard extends StatelessWidget {
           text: TextSpan(
         children: [
           TextSpan(
-              text: Utils.formatCurrencySymble(name: product.price!.currency),
+              text: Utils.currencySymble(name: product.price!.currency),
               style: TxtStyle.itemCardcurrency),
           const TextSpan(text: ' '),
           TextSpan(
-              text: Utils.formatCurrency(
+              text: Utils.value(
                   name: product.price!.currency,
                   amount: double.parse(product.price!.value!)),
               style: TxtStyle.itemCardPrice),

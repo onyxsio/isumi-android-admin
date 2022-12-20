@@ -85,7 +85,7 @@ class _ExpandedCheckboxState extends State<ExpandedCheckbox>
               axisAlignment: 1.0,
               sizeFactor: animation,
               child: ValueListenableBuilder<Box>(
-                  valueListenable: LocalDB.sellerBox.listenable(),
+                  valueListenable: HiveDB.sellerBox.listenable(),
                   builder: (context, box, widget) {
                     return Column(
                       children: [
@@ -93,37 +93,37 @@ class _ExpandedCheckboxState extends State<ExpandedCheckbox>
                         CheckBoxButton(
                             onChanged: (p0) => box.put('sold', p0),
                             text: 'sold',
-                            value: LocalDB.sold(box)!),
+                            value: HiveDB.sold(box)!),
                         CheckBoxButton(
                             onChanged: (p0) => box.put('unsold', p0),
                             text: 'unsold',
-                            value: LocalDB.unsold(box)!),
+                            value: HiveDB.unsold(box)!),
                         CheckBoxButton(
                             onChanged: (p0) => box.put('outOfStock', p0),
                             text: 'Out Of Stock',
-                            value: LocalDB.outOfStock(box)!),
+                            value: HiveDB.outOfStock(box)!),
                         CheckBoxButton(
                             onChanged: (p0) => box.put('almostFinished', p0),
                             text: 'Near to out stock',
-                            value: LocalDB.almostFinished(box)!),
+                            value: HiveDB.almostFinished(box)!),
                         CheckBoxButton(
                             onChanged: (p0) => box.put('todayOrders', p0),
                             text: 'Today\'s orders',
-                            value: LocalDB.todayOrders(box)!),
+                            value: HiveDB.todayOrders(box)!),
                         CheckBoxButton(
                             onChanged: (p0) => box.put('todayIncome', p0),
                             text: 'Today\'s income',
-                            value: LocalDB.todayIncome(box)!),
+                            value: HiveDB.todayIncome(box)!),
                         //
                         CheckBoxButton(
                             onChanged: (p0) => box.put('mostSell', p0),
                             text: 'Most Selling',
-                            value: LocalDB.mostSell(box)!),
+                            value: HiveDB.mostSell(box)!),
                         //
                         CheckBoxButton(
                             onChanged: (p0) => box.put('totalUsers', p0),
                             text: 'Total Users',
-                            value: LocalDB.totalUsers(box)!),
+                            value: HiveDB.totalUsers(box)!),
                         SizedBox(height: 5.w),
                       ],
                     );

@@ -39,7 +39,7 @@ class FirestoreRepository {
           )
           .toJson());
       // sellerDB.doc(user.uid).collection('orders');
-      // sellerDB.doc(user.uid).collection('products');
+      // s
     } on FirebaseException catch (e) {
       AppFirebaseFailure.fromCode(e.code);
       log(e.code);
@@ -111,31 +111,14 @@ class FirestoreRepository {
 
 // ***
 // ! TODO delete this below code
-  static Future<void> setupOrder() async {
-    try {
-      String orderId = const Uuid().v4();
-      // demoOrder
-      sellerDB
-          .doc('overview')
-          .collection('orders')
-          .doc(orderId)
-          .set(demoOrder.toJson());
-    } catch (_) {}
-  }
 
 //! TODO delete this above code
-  static Future<void> orderMoveToDelivered(Orders orders) async {
+  static Future<void> orderMoveToDelivered(Orders orders, String id) async {
     try {
-      // String orderId = const Uuid().v4();
-      // demoOrder
-      await sellerDB
-          .doc('overview')
-          .collection('orders')
-          .doc(orders.sId)
-          .delete();
+      await sellerDB.doc(id).collection('orders').doc(orders.sId).delete();
       //
-      sellerDB
-          .doc('overview')
+      await sellerDB
+          .doc(id)
           .collection('delivered')
           .doc(orders.sId)
           .set(orders.toJson());
@@ -143,6 +126,18 @@ class FirestoreRepository {
     } on FirebaseException catch (e) {
       throw AppFirebaseFailure.fromCode(e.code);
     } catch (_) {}
+  }
+
+  static Future<Seller> getSeller(String id) async {
+    try {
+      var seller = await sellerDB.doc(id).get();
+      return Seller.fromJsonFirebase(seller);
+      //
+    } on FirebaseException catch (e) {
+      throw AppFirebaseFailure.fromCode(e.code);
+    } catch (_) {
+      return Seller();
+    }
   }
 
 // !
@@ -193,7 +188,7 @@ class FirestoreRepository {
           .reduce((value, element) => value < element ? value : element);
 
       Price price =
-          Price(value: minimumPrice.toString(), currency: LocalDB.getCurrency);
+          Price(value: minimumPrice.toString(), currency: HiveDB.getCurrency);
 
       // upload Singel Image to Firestore, and get Url
       // photoUrl = await StorageRepository().uploadImages(productId, xfile);
@@ -208,7 +203,12 @@ class FirestoreRepository {
         rivews: rivews,
         images: photoUrls,
       );
-      productsDB.doc(productId).set(modifiyProduct.toJson());
+      await productsDB.doc(productId).set(modifiyProduct.toJson());
+      await sellerDB
+          .doc(user.uid)
+          .collection('products')
+          .doc(productId)
+          .set(modifiyProduct.toJson());
       // .then((value) =>
       // DialogBoxes.showAutoCloseDialog(context,
       //     type: InfoDialog.successful,
@@ -251,7 +251,7 @@ class FirestoreRepository {
       var minimumPrice = minPrice
           .reduce((value, element) => value < element ? value : element);
       Price price =
-          Price(value: minimumPrice.toString(), currency: LocalDB.getCurrency);
+          Price(value: minimumPrice.toString(), currency: HiveDB.getCurrency);
 
       var newProduct = product.copyWith(
         thumbnail: photoUrls[0],
@@ -269,7 +269,7 @@ class FirestoreRepository {
       // DialogBoxes.showAutoCloseDialog(context,
       //     type: InfoDialog.error, message: msg.message);
     } catch (_) {
-      DialogBoxes.showAutoCloseDialog(context,
+      DBox.autoClose(context,
           type: InfoDialog.error, message: 'An unknown exception occurred.');
     }
   }

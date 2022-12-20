@@ -156,10 +156,7 @@ class _ProductAddPageState extends State<ProductAddPage> {
 
       await FirestoreRepository.addProduct(context, product, imageFileList)
           .then((value) {
-        Navigator.of(context).pushNamedAndRemoveUntil(
-          '/MainPage',
-          (route) => false,
-        );
+        Navigator.of(context).pop();
       });
     } else {
       // TODO

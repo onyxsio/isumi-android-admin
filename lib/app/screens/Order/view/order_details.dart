@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:isumi/core/utils/utils.dart';
 import 'package:onyxsio/onyxsio.dart';
 
 class OrderDetails extends StatelessWidget {
@@ -6,18 +7,15 @@ class OrderDetails extends StatelessWidget {
   const OrderDetails({Key? key, required this.order}) : super(key: key);
 
   String priceCalsulate() {
-    var tot = (double.parse(order.total!) + double.parse(order.delivery!)) -
-        double.parse(order.discountedPrice!);
-
-    if (order.currency == '¥') {
-      return tot.toStringAsFixed(0);
-    } else {
-      return tot.toString();
-    }
+    // var tot = (double.parse(order.total!) + double.parse(order.delivery!)) -
+    //     double.parse(order.discountedPrice!);
+    return Utils.value(
+        amount: double.parse(order.total!), name: order.currency);
   }
 
   @override
   Widget build(BuildContext context) {
+    final user = context.select((AppBloc bloc) => bloc.state.user);
     return Scaffold(
       appBar: appBar(text: 'Order details'),
       body: SingleChildScrollView(
@@ -32,7 +30,6 @@ class OrderDetails extends StatelessWidget {
               SizedBox(height: 3.w),
               priceTag('Discount', order.discountedPrice!),
               SizedBox(height: 3.w),
-              // priceTag('Tax', '0'),
               const Divider(),
               SizedBox(height: 3.w),
               Row(
@@ -43,7 +40,8 @@ class OrderDetails extends StatelessWidget {
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text(order.currency!, style: TxtStyle.l1B),
+                      Text(Utils.currencySymble(name: order.currency),
+                          style: TxtStyle.l1B),
                       SizedBox(width: 2.w),
                       Text(priceCalsulate(),
                           style: TxtStyle.h11.copyWith(height: 0.5)),
@@ -59,11 +57,12 @@ class OrderDetails extends StatelessWidget {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(flex: 1, child: Text('Name: ', style: TxtStyle.l1B)),
+                  Expanded(flex: 1, child: Text('Name: ', style: TxtStyle.l3B)),
                   SizedBox(width: 2.w),
                   Expanded(
                     flex: 3,
-                    child: Text(order.customer!.name!, style: TxtStyle.l3),
+                    child: Text(order.customer!.address!.name!,
+                        style: TxtStyle.l3),
                   ),
                 ],
               ),
@@ -84,19 +83,20 @@ class OrderDetails extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 3.w),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                      flex: 1, child: Text('Phone :', style: TxtStyle.l3B)),
-                  SizedBox(width: 2.w),
-                  Expanded(
-                    flex: 3,
-                    child:
-                        Text(order.customer!.phoneNumber!, style: TxtStyle.l3),
-                  ),
-                ],
-              ),
+              if (order.customer!.phoneNumber != null)
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                        flex: 1, child: Text('Phone :', style: TxtStyle.l3B)),
+                    SizedBox(width: 2.w),
+                    Expanded(
+                      flex: 3,
+                      child: Text(order.customer!.phoneNumber!,
+                          style: TxtStyle.l3),
+                    ),
+                  ],
+                ),
               SizedBox(height: 3.w),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -110,10 +110,6 @@ class OrderDetails extends StatelessWidget {
                   ),
                 ],
               ),
-              // Text(
-              //   '+94 710 056 565 ',
-              //   style: TextStyles.l1B,
-              // ),
             ], 'Shipping details'),
             SizedBox(height: 5.w),
           ],
@@ -122,7 +118,7 @@ class OrderDetails extends StatelessWidget {
       bottomNavigationBar: bottomNavigationBar(
         text: 'Accept an Order',
         onTap: () async {
-          FirestoreRepository.orderMoveToDelivered(order);
+          FirestoreRepository.orderMoveToDelivered(order, user.id);
           Navigator.pushNamed(context, '/GenerateBill', arguments: order);
         },
       ),
@@ -139,10 +135,7 @@ class OrderDetails extends StatelessWidget {
           style: TxtStyle.b5B,
         ),
         SizedBox(height: 3.w),
-        Text(
-          item.name!,
-          style: TxtStyle.reviews,
-        ),
+        Text(item.name!, style: TxtStyle.reviews),
         SizedBox(height: 3.w),
         Table(
           border: TableBorder.symmetric(
@@ -186,42 +179,40 @@ class OrderDetails extends StatelessWidget {
                     ),
                   ),
                 ]),
-            for (int o = 0; o < item.variants!.length; o++)
-              for (int j = 0; j < item.variants![o].subvariants!.length; j++)
-                TableRow(
-                  children: [
-                    TableCell(
-                      verticalAlignment: TableCellVerticalAlignment.middle,
-                      child: SizedBox(
-                        height: 10.w,
-                        child: Center(
-                          child: Text(
-                              '${item.variants![o].subvariants![j].size}',
-                              textAlign: TextAlign.center,
-                              style: TxtStyle.b5B),
-                        ),
-                      ),
+            // for (int o = 0; o < item.variants!.length; o++)
+            // for (int j = 0; j < item.variants![o].subvariants!.length; j++)
+            TableRow(
+              children: [
+                TableCell(
+                  verticalAlignment: TableCellVerticalAlignment.middle,
+                  child: SizedBox(
+                    height: 10.w,
+                    child: Center(
+                      child: Text('${item.size}',
+                          textAlign: TextAlign.center, style: TxtStyle.b5B),
                     ),
-                    TableCell(
-                      verticalAlignment: TableCellVerticalAlignment.middle,
-                      child: Text('${item.variants![o].subvariants![j].qty}',
-                          textAlign: TextAlign.center, style: TxtStyle.header),
+                  ),
+                ),
+                TableCell(
+                  verticalAlignment: TableCellVerticalAlignment.middle,
+                  child: Text('${item.quantity}',
+                      textAlign: TextAlign.center, style: TxtStyle.header),
+                ),
+                TableCell(
+                  verticalAlignment: TableCellVerticalAlignment.middle,
+                  child: Container(
+                    height: 7.w,
+                    width: 7.w,
+                    // margin: EdgeInsets.only(top: 2.w),
+                    decoration: BoxDecoration(
+                      // color: Colors.red.withOpacity(0.2),
+                      color: Color(int.parse(item.color!)),
+                      shape: BoxShape.circle,
                     ),
-                    TableCell(
-                      verticalAlignment: TableCellVerticalAlignment.middle,
-                      child: Container(
-                        height: 7.w,
-                        width: 7.w,
-                        // margin: EdgeInsets.only(top: 2.w),
-                        decoration: BoxDecoration(
-                          // color: Colors.red.withOpacity(0.2),
-                          color: Color(int.parse(item.variants![o].color!)),
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                    ),
-                  ],
-                )
+                  ),
+                ),
+              ],
+            )
           ],
         ),
         SizedBox(height: 5.w),
@@ -239,9 +230,15 @@ class OrderDetails extends StatelessWidget {
         ),
         Row(
           children: [
-            Text(order.currency!, style: TxtStyle.l1B),
+            Text(Utils.currencySymble(name: order.currency),
+                style: TxtStyle.l1B),
             SizedBox(width: 1.w),
-            Text(cost, style: TxtStyle.header),
+            Text(
+                Utils.value(
+                  amount: double.parse(cost),
+                  name: order.currency,
+                ),
+                style: TxtStyle.header),
           ],
         ),
       ],

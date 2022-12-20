@@ -7,15 +7,16 @@ class OrderPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = context.select((AppBloc bloc) => bloc.state.user);
     return DefaultTabController(
       length: 3,
       child: Scaffold(
         appBar: _buildAppBar(),
-        body: const TabBarView(
+        body: TabBarView(
           children: [
-            OrderInformation(),
-            DeliveredInformation(),
-            TestDataOrder(),
+            OrderInformation(id: user.id),
+            const DeliveredInformation(),
+            const TestDataOrder(),
           ],
         ),
       ),

@@ -1,5 +1,6 @@
 import 'package:components/components.dart';
 import 'package:flutter/material.dart';
+import '../../util/util.dart';
 import 'package:remote_data/remote_data.dart';
 
 class NowOrderListCard extends StatelessWidget {
@@ -17,17 +18,19 @@ class NowOrderListCard extends StatelessWidget {
         margin: EdgeInsets.symmetric(vertical: 3.w),
         decoration: BoxDeco.overview,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
-                    child: Text('Order No: ${order.sId}',
+                    child: Text('Order No: #${Utils.orderNumber(order.sId!)}',
                         maxLines: 1, style: TxtStyle.b5B)),
-                Text(order.date!, style: TxtStyle.h4L),
               ],
             ),
             const Divider(),
+            SizedBox(height: 2.w),
+            Text(Utils.date(order.date!), style: TxtStyle.h4L),
             SizedBox(height: 2.w),
             Row(
               children: [

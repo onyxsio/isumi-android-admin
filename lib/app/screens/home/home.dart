@@ -15,6 +15,7 @@ class _HomePageState extends State<HomePage> {
   // List<OverView> overView = demoOverview;
   @override
   Widget build(BuildContext context) {
+    final user = context.select((AppBloc bloc) => bloc.state.user);
     return Scaffold(
       appBar: mainAppBar(text: 'Welcome to store admin'),
       body: SingleChildScrollView(
@@ -53,7 +54,7 @@ class _HomePageState extends State<HomePage> {
             SizedBox(height: 5.w),
             Text('Overview', style: TxtStyle.pageSubHeader),
             // _buildOverviewGrid()
-            DashboardInformation(child: getDataFrom)
+            DashboardInformation(child: getDataFrom, id: user.id)
           ],
         ),
       ),
@@ -62,7 +63,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget getDataFrom(Seller data) {
     return ValueListenableBuilder<Box>(
-        valueListenable: LocalDB.sellerBox.listenable(),
+        valueListenable: HiveDB.sellerBox.listenable(),
         builder: (context, box, widget) {
           // var darkMode = box.get('sellerBox');
           // print(LocalDB.mostSell.);
@@ -77,22 +78,22 @@ class _HomePageState extends State<HomePage> {
             childAspectRatio: 0.20.h,
             // semanticChildCount: 5,
             children: [
-              if (LocalDB.outOfStock(box)!)
+              if (HiveDB.outOfStock(box)!)
                 _buildTile('Out Of Stock', data.outOfStock!.length.toString()),
-              if (LocalDB.todayOrders(box)!)
+              if (HiveDB.todayOrders(box)!)
                 _buildTile(
                     'Today\'s orders', data.todayOrders!.length.toString()),
-              if (LocalDB.sold(box)!)
+              if (HiveDB.sold(box)!)
                 _buildTile('Sold', data.sold!.length.toString()),
-              if (LocalDB.unsold(box)!)
+              if (HiveDB.unsold(box)!)
                 _buildTile('Unsold', data.unsold!.length.toString()),
-              if (LocalDB.todayIncome(box)!)
+              if (HiveDB.todayIncome(box)!)
                 _buildTile("Today's income", data.todayIncome!),
-              if (LocalDB.totalUsers(box)!)
+              if (HiveDB.totalUsers(box)!)
                 _buildTile('Total Users', data.totalUsers!),
-              if (LocalDB.mostSell(box)!)
+              if (HiveDB.mostSell(box)!)
                 _buildTile('Most Selling', data.mostSell!.length.toString()),
-              if (LocalDB.almostFinished(box)!)
+              if (HiveDB.almostFinished(box)!)
                 _buildTile('Near to out stock',
                     data.almostFinished!.length.toString()),
             ],
