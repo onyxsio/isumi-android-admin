@@ -41,11 +41,16 @@ class AuthRepository {
   /// Creates a new user with the provided email] and password].
   Future<void> signUp({required String email, required String password}) async {
     try {
-      var newUser = await _firebaseAuth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      await FirestoreRepository.createAccount(newUser.user!);
+      var isAdmin = await FirestoreRepository.isAdmin(email);
+
+      if (isAdmin) {
+        var newUser = await _firebaseAuth.createUserWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
+        await FirestoreRepository.createAccount(newUser.user!);
+      }
+      // TODO else alrady user logdind
     } on firebase_auth.FirebaseAuthException catch (e) {
       throw AppFirebaseFailure.fromCode(e.code);
     } catch (_) {
@@ -70,10 +75,14 @@ class AuthRepository {
   Future<void> logInWithEmailAndPassword(
       {required String email, required String password}) async {
     try {
-      await _firebaseAuth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+      var isAdmin = await FirestoreRepository.isAdmin(email);
+      if (isAdmin) {
+        await _firebaseAuth.signInWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
+      }
+      // TODO else alrady user logdind
     } on firebase_auth.FirebaseAuthException catch (e) {
       throw AppFirebaseFailure.fromCode(e.code);
     } catch (_) {
@@ -86,15 +95,20 @@ class AuthRepository {
       late final firebase_auth.AuthCredential credential;
 
       final googleUser = await _googleSignIn.signIn();
-      final googleAuth = await googleUser!.authentication;
-      credential = firebase_auth.GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
 
-      var user = await _firebaseAuth.signInWithCredential(credential);
-      // googleUser.
-      await FirestoreRepository.createAccount(user.user!);
+      final googleAuth = await googleUser!.authentication;
+      var isAdmin = await FirestoreRepository.isAdmin(googleUser.email);
+      if (isAdmin) {
+        credential = firebase_auth.GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken,
+          idToken: googleAuth.idToken,
+        );
+
+        var user = await _firebaseAuth.signInWithCredential(credential);
+        // googleUser.
+        await FirestoreRepository.createAccount(user.user!);
+      }
+      // TODO else alrady user logdind
     } on firebase_auth.FirebaseAuthException catch (e) {
       throw AppFirebaseFailure.fromCode(e.code);
     } catch (e) {

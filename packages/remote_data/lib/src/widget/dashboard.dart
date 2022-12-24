@@ -24,9 +24,11 @@ class DashboardInformation extends StatelessWidget {
           return const Center(child: HRDots());
         }
         // var f1 = snapshot.data!.docs.first.data();
-        Seller f1 = Seller.fromJsonFirebase(snapshot.data);
-
-        return child.call(f1);
+        if (snapshot.data != null) {
+          Seller f1 = Seller.fromJsonFirebase(snapshot.data);
+          return child.call(f1);
+        }
+        return const SizedBox();
       },
     );
   }

@@ -27,12 +27,12 @@ class OrderInformation extends StatelessWidget {
         }
 
         return ListView(
-          padding: EdgeInsets.symmetric(horizontal: 5.w),
+          padding: EdgeInsets.all(5.w),
           children: snapshot.data!.docs.map((DocumentSnapshot document) {
             Map<String, dynamic> data =
                 document.data()! as Map<String, dynamic>;
             Orders order = Orders.fromJson(data);
-            return NowOrderListCard(order: order);
+            return NowOrderListCard(order: order, isClick: true);
           }).toList(),
         );
       },
