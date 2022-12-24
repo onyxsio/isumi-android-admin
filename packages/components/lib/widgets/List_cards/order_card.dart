@@ -1,17 +1,21 @@
 import 'package:components/components.dart';
 import 'package:flutter/material.dart';
+import 'package:isumi/app/models/route.dart';
 import '../../util/util.dart';
 import 'package:remote_data/remote_data.dart';
 
 class NowOrderListCard extends StatelessWidget {
   final Orders order;
-  const NowOrderListCard({Key? key, required this.order}) : super(key: key);
+  final bool isClick;
+  const NowOrderListCard({Key? key, required this.isClick, required this.order})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, '/OrderDetails', arguments: order);
+        OrderData data = OrderData(isNow: isClick, order: order);
+        Navigator.pushNamed(context, '/OrderDetails', arguments: data);
       },
       child: Container(
         padding: EdgeInsets.all(4.w),

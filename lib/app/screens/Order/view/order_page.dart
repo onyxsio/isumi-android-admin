@@ -15,7 +15,7 @@ class OrderPage extends StatelessWidget {
         body: TabBarView(
           children: [
             OrderInformation(id: user.id),
-            const DeliveredInformation(),
+            DeliveredInformation(id: user.id),
             const TestDataOrder(),
           ],
         ),

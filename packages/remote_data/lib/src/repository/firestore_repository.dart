@@ -1,7 +1,4 @@
-// ignore_for_file: depend_on_referenced_packages
 import 'package:firebase_auth/firebase_auth.dart' as auth;
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:components/components.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -24,9 +21,30 @@ class FirestoreRepository {
   static var productStream = productsDB.snapshots();
   static var offerDB = firestore.collection('offers');
   static var offerStream = offerDB.snapshots();
+  static var customerDB = firestore.collection('customers');
   // Stream<QuerySnapshot>
   // static var orderStream = sellerDB.doc('order').snapshots();
   //
+
+  static Future<bool> isAdmin(String email) async {
+    try {
+      return await customerDB
+          .where('email', isEqualTo: email)
+          .get()
+          .then((QuerySnapshot snapshot) {
+        if (snapshot.docs.isNotEmpty) {
+          return false;
+        } else {
+          return true;
+        }
+      });
+      // return true;
+    } on FirebaseException catch (e) {
+      throw AppFirebaseFailure.fromCode(e.code);
+    } catch (_) {
+      return false;
+    }
+  }
 
   static Future<void> createAccount(auth.User user) async {
     try {
@@ -42,22 +60,21 @@ class FirestoreRepository {
       // s
     } on FirebaseException catch (e) {
       AppFirebaseFailure.fromCode(e.code);
-      log(e.code);
-    } catch (e) {
-      log('e: $e');
-    }
+    } catch (_) {}
   }
 
   Future<void> setupDeviceToken() async {
-    final user = auth.FirebaseAuth.instance.currentUser;
-    String? deviceToken = await FirebaseMessaging.instance.getToken();
     // Dashboard dashboard = Dashboard();
     try {
+      final user = auth.FirebaseAuth.instance.currentUser;
+      String? deviceToken = await FirebaseMessaging.instance.getToken();
       sellerDB.doc(user!.uid).get().then((DocumentSnapshot documentSnapshot) {
         if (documentSnapshot.exists) {
           sellerDB.doc(user.uid).update({'deviceToken': deviceToken});
         }
       });
+    } on FirebaseException catch (e) {
+      throw AppFirebaseFailure.fromCode(e.code);
     } catch (_) {}
   }
 
@@ -79,9 +96,7 @@ class FirestoreRepository {
         'valid': offers.expirationDate,
         'products': productDB
       });
-    } catch (e) {
-      log(e.toString());
-    }
+    } catch (_) {}
   }
 
   static Future<void> deleteOffer(String id) async {
@@ -141,9 +156,9 @@ class FirestoreRepository {
   }
 
 // !
-  static Future<void> deleteDelivery(String pId) async {
+  static Future<void> deleteDelivery(String pId, String uId) async {
     try {
-      await sellerDB.doc('overview').collection('delivered').doc(pId).delete();
+      await sellerDB.doc(uId).collection('delivered').doc(pId).delete();
     } on FirebaseException catch (e) {
       throw AppFirebaseFailure.fromCode(e.code);
     } catch (_) {

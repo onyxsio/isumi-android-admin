@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:isumi/app/models/route.dart';
 import 'package:isumi/app/screens/Order/view/bill_generate_page.dart';
 import 'package:isumi/app/screens/Order/view/order_details.dart';
 import 'package:isumi/app/screens/authentication/forgotPass/view/forgot_page.dart';
@@ -33,7 +34,7 @@ class RouteGenerator {
         return createRoute(child: const MainPage());
 
       case '/OrderDetails':
-        Orders order = arguments as Orders;
+        OrderData order = arguments as OrderData;
         return createRoute(child: OrderDetails(order: order));
 
       case '/GenerateBill':

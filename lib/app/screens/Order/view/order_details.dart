@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:isumi/app/models/route.dart';
 import 'package:isumi/core/utils/utils.dart';
 import 'package:onyxsio/onyxsio.dart';
 
 class OrderDetails extends StatelessWidget {
-  final Orders order;
+  final OrderData order;
   const OrderDetails({Key? key, required this.order}) : super(key: key);
 
   String priceCalsulate() {
     // var tot = (double.parse(order.total!) + double.parse(order.delivery!)) -
     //     double.parse(order.discountedPrice!);
     return Utils.value(
-        amount: double.parse(order.total!), name: order.currency);
+        amount: double.parse(order.order.total!), name: order.order.currency);
   }
 
   @override
@@ -24,11 +25,11 @@ class OrderDetails extends StatelessWidget {
         child: Column(
           children: [
             _tileBackground([
-              priceTag('Items Total', order.total!),
+              priceTag('Items Total', order.order.total!),
               SizedBox(height: 3.w),
-              priceTag('Delivery charges', order.delivery!),
+              priceTag('Delivery charges', order.order.delivery!),
               SizedBox(height: 3.w),
-              priceTag('Discount', order.discountedPrice!),
+              priceTag('Discount', order.order.discountedPrice!),
               SizedBox(height: 3.w),
               const Divider(),
               SizedBox(height: 3.w),
@@ -40,7 +41,7 @@ class OrderDetails extends StatelessWidget {
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text(Utils.currencySymble(name: order.currency),
+                      Text(Utils.currencySymble(name: order.order.currency),
                           style: TxtStyle.l1B),
                       SizedBox(width: 2.w),
                       Text(priceCalsulate(),
@@ -51,7 +52,7 @@ class OrderDetails extends StatelessWidget {
               ),
             ], 'Price details'),
             _tileBackground(
-                order.items!.map((e) => _buildProductTile(e)).toList(),
+                order.order.items!.map((e) => _buildProductTile(e)).toList(),
                 'Product details'),
             _tileBackground([
               Row(
@@ -61,7 +62,7 @@ class OrderDetails extends StatelessWidget {
                   SizedBox(width: 2.w),
                   Expanded(
                     flex: 3,
-                    child: Text(order.customer!.address!.name!,
+                    child: Text(order.order.customer!.address!.name!,
                         style: TxtStyle.l3),
                   ),
                 ],
@@ -76,14 +77,14 @@ class OrderDetails extends StatelessWidget {
                   Expanded(
                     flex: 3,
                     child: Text(
-                      '${order.customer!.address!.streetAddress!} ${order.customer!.address!.city} ${order.customer!.address!.postalCode}',
+                      '${order.order.customer!.address!.streetAddress!} ${order.order.customer!.address!.city} ${order.order.customer!.address!.postalCode}',
                       style: TxtStyle.l3,
                     ),
                   ),
                 ],
               ),
               SizedBox(height: 3.w),
-              if (order.customer!.phoneNumber != null)
+              if (order.order.customer!.phoneNumber != null)
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -92,7 +93,7 @@ class OrderDetails extends StatelessWidget {
                     SizedBox(width: 2.w),
                     Expanded(
                       flex: 3,
-                      child: Text(order.customer!.phoneNumber!,
+                      child: Text(order.order.customer!.phoneNumber!,
                           style: TxtStyle.l3),
                     ),
                   ],
@@ -106,7 +107,8 @@ class OrderDetails extends StatelessWidget {
                   SizedBox(width: 2.w),
                   Expanded(
                     flex: 3,
-                    child: Text(order.customer!.email!, style: TxtStyle.l3),
+                    child:
+                        Text(order.order.customer!.email!, style: TxtStyle.l3),
                   ),
                 ],
               ),
@@ -115,13 +117,15 @@ class OrderDetails extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: bottomNavigationBar(
-        text: 'Accept an Order',
-        onTap: () async {
-          FirestoreRepository.orderMoveToDelivered(order, user.id);
-          Navigator.pushNamed(context, '/GenerateBill', arguments: order);
-        },
-      ),
+      bottomNavigationBar: order.isNow
+          ? bottomNavigationBar(
+              text: 'Accept an Order',
+              onTap: () async {
+                FirestoreRepository.orderMoveToDelivered(order.order, user.id);
+                Navigator.pushNamed(context, '/GenerateBill', arguments: order);
+              },
+            )
+          : null,
     );
   }
 
@@ -230,13 +234,13 @@ class OrderDetails extends StatelessWidget {
         ),
         Row(
           children: [
-            Text(Utils.currencySymble(name: order.currency),
+            Text(Utils.currencySymble(name: order.order.currency),
                 style: TxtStyle.l1B),
             SizedBox(width: 1.w),
             Text(
                 Utils.value(
                   amount: double.parse(cost),
-                  name: order.currency,
+                  name: order.order.currency,
                 ),
                 style: TxtStyle.header),
           ],
