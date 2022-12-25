@@ -204,7 +204,7 @@ class DrawerButton extends StatelessWidget {
         height: 10.w,
         child: Text(
           text,
-          style: TxtStyle.l3B,
+          style: TxtStyle.l5B,
         ),
       ),
     );

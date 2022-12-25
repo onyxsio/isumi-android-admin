@@ -214,7 +214,6 @@ class Product {
       // data['rivews'] = rivews!.map((v) => v.toJson()).toList();
     }
     if (variant != null) {
-      // data['variant'] = variant!.toJson();
       data['variant'] = variant!.map((v) => v.toJson()).toList();
     }
     if (package != null) {
@@ -357,11 +356,24 @@ class ReviewRating {
 
 class Variant {
   String? color;
+  String? id;
   List<Subvariant>? subvariant;
 
-  Variant({this.color, this.subvariant});
+  Variant({this.id, this.color, this.subvariant});
+
+  Variant copyWith({
+    String? color,
+    String? id,
+    List<Subvariant>? subvariant,
+  }) =>
+      Variant(
+        id: id ?? this.id,
+        color: color ?? this.color,
+        subvariant: subvariant ?? this.subvariant,
+      );
 
   Variant.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
     color = json['color'];
     if (json['subvariant'] != null) {
       subvariant = <Subvariant>[];
@@ -373,6 +385,7 @@ class Variant {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
     data['color'] = color;
     if (subvariant != null) {
       data['subvariant'] = subvariant!.map((v) => v.toJson()).toList();
@@ -385,11 +398,25 @@ class Subvariant {
   String? size;
   String? price;
   String? stock;
+  String? id;
+  Subvariant({this.id, this.size, this.price, this.stock});
 
-  Subvariant({this.size, this.price, this.stock});
+  Subvariant copyWith({
+    String? size,
+    String? price,
+    String? stock,
+    String? id,
+  }) =>
+      Subvariant(
+        id: id ?? this.id,
+        size: size ?? this.size,
+        price: price ?? this.price,
+        stock: stock ?? this.stock,
+      );
 
   Subvariant.fromJson(Map<String, dynamic> json) {
     size = json['size'];
+    id = json['id'];
     price = json['price'];
     stock = json['stock'];
   }
@@ -397,6 +424,7 @@ class Subvariant {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['size'] = size;
+    data['id'] = id;
     data['price'] = price;
     data['stock'] = stock;
     return data;

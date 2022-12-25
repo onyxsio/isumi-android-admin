@@ -1,9 +1,9 @@
 import 'package:onyxsio/onyxsio.dart';
 import 'package:firebase_core/firebase_core.dart';
-export 'auth_repository.dart';
-export 'firestore_repository.dart';
-export 'storage_repository.dart';
-export 'message.dart';
+export 'repository/auth.dart';
+export 'repository/firestore.dart';
+export 'repository/storage.dart';
+export 'notification/message.dart';
 
 class FirebaseService {
   static Future<void> init() async {
@@ -12,7 +12,7 @@ class FirebaseService {
     // Initialize the Notification Service
     await NotificationService.initializeFirebase();
     //
-    await FirestoreRepository().setupDeviceToken();
+    await FireRepo().setupDeviceToken();
     //
     // await FirestoreRepository().setupDashboard(emptyDash);
     // final authRepo = AuthRepository();

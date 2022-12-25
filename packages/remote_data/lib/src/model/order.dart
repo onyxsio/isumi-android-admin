@@ -289,67 +289,26 @@ class Address {
 //   items: [
 //     Items(
 //       name: 'kota gawma',
-//       productId: '13454689dsa7d',
-//       variants: [
-//         Variants(
-//           color: '4286319678',
-//           subvariants: [
-//             Subvariants(
-//               size: 'xs',
-//               price: '5656',
-//               qty: '5',
-//             ),
-//             Subvariants(
-//               size: 'M',
-//               price: '2346',
-//               qty: '6',
-//             ),
-//             Subvariants(
-//               size: 'S',
-//               price: '006',
-//               qty: '2',
-//             ),
-//           ],
-//         ),
-//       ],
+//       productId: 'fcdce7c0-8388-11ed-8c75-3d328ce0ad6b',
+//       sellerId: '',
+//       price: '',
+//       size: '2XS',
+//       quantity: '2',
+//       color: '4281100799',
+//       currency: '',
+//       image: '',
 //     ),
-//     Items(name: 'kota gawma ahdkadas', productId: '13454689dsa7d', variants: [
-//       Variants(
-//         color: '4292054086',
-//         subvariants: [
-//           Subvariants(
-//             size: 's',
-//             price: '565',
-//             qty: '52',
-//           ),
-//           Subvariants(
-//             size: 'xs',
-//             price: '956',
-//             qty: '5',
-//           ),
-//         ],
-//       ),
-//       Variants(
-//         color: '4286319678',
-//         subvariants: [
-//           Subvariants(
-//             size: 'xs',
-//             price: '5656',
-//             qty: '5',
-//           ),
-//           Subvariants(
-//             size: 'M',
-//             price: '2346',
-//             qty: '6',
-//           ),
-//           Subvariants(
-//             size: 'S',
-//             price: '006',
-//             qty: '2',
-//           ),
-//         ],
-//       ),
-//     ]),
+//     Items(
+//       name: 'kota gawma',
+//       productId: 'fcdce7c0-8388-11ed-8c75-3d328ce0ad6b',
+//       sellerId: '',
+//       price: '',
+//       size: 'XS',
+//       quantity: '1',
+//       color: '4280363631',
+//       currency: '',
+//       image: '',
+//     ),
 //   ],
 //   customer: Customer(
 //     name: 'sudesh bandara',

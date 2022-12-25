@@ -44,7 +44,7 @@ class DeliveredInformation extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 5.w),
       child: InkWell(
           onTap: () async {
-            await FirestoreRepository.deleteDelivery(index, id);
+            await FireRepo.deleteDelivery(index, id);
           },
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,

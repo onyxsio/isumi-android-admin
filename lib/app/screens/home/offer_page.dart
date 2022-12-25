@@ -55,7 +55,7 @@ class _OfferPageState extends State<OfferPage> {
 
   StreamBuilder<QuerySnapshot<Map<String, dynamic>>> _buildOffersList(context) {
     return StreamBuilder(
-        stream: FirestoreRepository.offerStream,
+        stream: FireRepo.offerStream,
         builder: (builder, AsyncSnapshot<QuerySnapshot> snap) {
           if (snap.hasError) {
             return Text('Something went wrong');
@@ -155,7 +155,7 @@ class _OfferPageState extends State<OfferPage> {
         padding: EdgeInsets.symmetric(horizontal: 6.w),
         child: GestureDetector(
             onTap: () async {
-              await FirestoreRepository.deleteOffer(id);
+              await FireRepo.deleteOffer(id);
               Navigator.pop(context);
             },
             child: Row(
@@ -335,7 +335,7 @@ class _OfferPageState extends State<OfferPage> {
         percentage: percentage.text,
         expirationDate: selectedTime.toString(),
       );
-      await FirestoreRepository.setupOffers(list.selectedItems, offer, _image)
+      await FireRepo.setupOffers(list.selectedItems, offer, _image)
           .whenComplete(() {
         list.selectedItems.clear();
         Navigator.pop(context);

@@ -42,7 +42,7 @@ class OrderDetails extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(Utils.currencySymble(name: order.order.currency),
-                          style: TxtStyle.l1B),
+                          style: TxtStyle.l2B),
                       SizedBox(width: 2.w),
                       Text(priceCalsulate(),
                           style: TxtStyle.h11.copyWith(height: 0.5)),
@@ -58,12 +58,12 @@ class OrderDetails extends StatelessWidget {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(flex: 1, child: Text('Name: ', style: TxtStyle.l3B)),
+                  Expanded(flex: 1, child: Text('Name: ', style: TxtStyle.l5B)),
                   SizedBox(width: 2.w),
                   Expanded(
                     flex: 3,
                     child: Text(order.order.customer!.address!.name!,
-                        style: TxtStyle.l3),
+                        style: TxtStyle.l5),
                   ),
                 ],
               ),
@@ -72,13 +72,13 @@ class OrderDetails extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
-                      flex: 1, child: Text('Address:', style: TxtStyle.l3B)),
+                      flex: 1, child: Text('Address:', style: TxtStyle.l5B)),
                   SizedBox(width: 2.w),
                   Expanded(
                     flex: 3,
                     child: Text(
                       '${order.order.customer!.address!.streetAddress!} ${order.order.customer!.address!.city} ${order.order.customer!.address!.postalCode}',
-                      style: TxtStyle.l3,
+                      style: TxtStyle.l5,
                     ),
                   ),
                 ],
@@ -89,12 +89,12 @@ class OrderDetails extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(
-                        flex: 1, child: Text('Phone :', style: TxtStyle.l3B)),
+                        flex: 1, child: Text('Phone :', style: TxtStyle.l5B)),
                     SizedBox(width: 2.w),
                     Expanded(
                       flex: 3,
                       child: Text(order.order.customer!.phoneNumber!,
-                          style: TxtStyle.l3),
+                          style: TxtStyle.l5),
                     ),
                   ],
                 ),
@@ -103,12 +103,12 @@ class OrderDetails extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
-                      flex: 1, child: Text('Email :', style: TxtStyle.l3B)),
+                      flex: 1, child: Text('Email :', style: TxtStyle.l5B)),
                   SizedBox(width: 2.w),
                   Expanded(
                     flex: 3,
                     child:
-                        Text(order.order.customer!.email!, style: TxtStyle.l3),
+                        Text(order.order.customer!.email!, style: TxtStyle.l5),
                   ),
                 ],
               ),
@@ -121,7 +121,7 @@ class OrderDetails extends StatelessWidget {
           ? bottomNavigationBar(
               text: 'Accept an Order',
               onTap: () async {
-                FirestoreRepository.orderMoveToDelivered(order.order, user.id);
+                FireRepo.orderMoveToDelivered(order.order, user.id);
                 Navigator.pushNamed(context, '/GenerateBill', arguments: order);
               },
             )
@@ -235,7 +235,7 @@ class OrderDetails extends StatelessWidget {
         Row(
           children: [
             Text(Utils.currencySymble(name: order.order.currency),
-                style: TxtStyle.l1B),
+                style: TxtStyle.l2B),
             SizedBox(width: 1.w),
             Text(
                 Utils.value(
