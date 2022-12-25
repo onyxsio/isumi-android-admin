@@ -57,12 +57,6 @@ class _ProductUpdatePageState extends State<ProductUpdatePage> {
         pDays.text = widget.product.shipping!.returnDays!;
       }
 
-      // if (widget.product.price!.discount != null) {
-      //   pDiscount.text = widget.product.price!.discount!;
-      // }
-      // if (widget.product.offers!.percentage != null) {
-      //   pDiscount.text = widget.product.offers!.percentage!;
-      // }
       productDataList.addAll(widget.product.variant!);
     });
   }
@@ -193,11 +187,11 @@ class _ProductUpdatePageState extends State<ProductUpdatePage> {
         package: package,
       );
 
-      await FirestoreRepository.updateProduct(
+      await FireRepo.updateProduct(
         context,
         product,
         imageFileList,
-        productDataList,
+        // productDataList,
         // pDiscount.text,
       ).then((value) {
         // DialogBoxes.showAutoCloseDialog(context, message: value);

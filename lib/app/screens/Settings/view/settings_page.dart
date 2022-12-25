@@ -108,10 +108,10 @@ class _SettingsPageState extends State<SettingsPage> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text('It\'s used as your Store logo.',
-                                      style: TxtStyle.l1),
+                                      style: TxtStyle.l2),
                                   SizedBox(height: 2.w),
                                   Text('photo measures 100px by 100px.',
-                                      style: TxtStyle.l1),
+                                      style: TxtStyle.l2),
                                 ],
                               ),
                             ),

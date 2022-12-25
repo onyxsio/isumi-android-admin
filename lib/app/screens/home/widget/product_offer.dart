@@ -7,7 +7,7 @@ class OfferSearch extends o.OfferDeleg<String> {
   Widget buildResults(BuildContext context) {
     List<o.Product> matchQuery = [];
     return StreamBuilder<o.QuerySnapshot>(
-      stream: o.FirestoreRepository.productStream,
+      stream: o.FireRepo.productStream,
       builder: (BuildContext context, AsyncSnapshot<o.QuerySnapshot> snapshot) {
         if (snapshot.hasError) {
           return const Text('Something went wrong');
@@ -35,7 +35,7 @@ class OfferSearch extends o.OfferDeleg<String> {
   Widget buildSuggestions(BuildContext context) {
     List<o.Product> matchQuery = [];
     return StreamBuilder<o.QuerySnapshot>(
-      stream: o.FirestoreRepository.productStream,
+      stream: o.FireRepo.productStream,
       builder: (BuildContext context, AsyncSnapshot<o.QuerySnapshot> snapshot) {
         if (snapshot.hasError) {
           return const Text('Something went wrong');

@@ -4,7 +4,7 @@ import 'package:cache/cache.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:remote_data/src/error/failure.dart';
 import 'package:remote_data/src/model/admin.dart';
-import 'package:remote_data/src/repository/firestore_repository.dart';
+import 'package:remote_data/src/repository/firestore.dart';
 
 class AuthRepository {
   AuthRepository({
@@ -41,14 +41,14 @@ class AuthRepository {
   /// Creates a new user with the provided email] and password].
   Future<void> signUp({required String email, required String password}) async {
     try {
-      var isAdmin = await FirestoreRepository.isAdmin(email);
+      var isAdmin = await FireRepo.isAdmin(email);
 
       if (isAdmin) {
         var newUser = await _firebaseAuth.createUserWithEmailAndPassword(
           email: email,
           password: password,
         );
-        await FirestoreRepository.createAccount(newUser.user!);
+        await FireRepo.createAccount(newUser.user!);
       }
       // TODO else alrady user logdind
     } on firebase_auth.FirebaseAuthException catch (e) {
@@ -75,7 +75,7 @@ class AuthRepository {
   Future<void> logInWithEmailAndPassword(
       {required String email, required String password}) async {
     try {
-      var isAdmin = await FirestoreRepository.isAdmin(email);
+      var isAdmin = await FireRepo.isAdmin(email);
       if (isAdmin) {
         await _firebaseAuth.signInWithEmailAndPassword(
           email: email,
@@ -97,7 +97,7 @@ class AuthRepository {
       final googleUser = await _googleSignIn.signIn();
 
       final googleAuth = await googleUser!.authentication;
-      var isAdmin = await FirestoreRepository.isAdmin(googleUser.email);
+      var isAdmin = await FireRepo.isAdmin(googleUser.email);
       if (isAdmin) {
         credential = firebase_auth.GoogleAuthProvider.credential(
           accessToken: googleAuth.accessToken,
@@ -106,7 +106,7 @@ class AuthRepository {
 
         var user = await _firebaseAuth.signInWithCredential(credential);
         // googleUser.
-        await FirestoreRepository.createAccount(user.user!);
+        await FireRepo.createAccount(user.user!);
       }
       // TODO else alrady user logdind
     } on firebase_auth.FirebaseAuthException catch (e) {

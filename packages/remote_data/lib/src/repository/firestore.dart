@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:components/components.dart';
@@ -8,9 +10,9 @@ import 'package:local_database/local_db.dart';
 import 'package:remote_data/src/error/failure.dart';
 import 'package:remote_data/src/model/models.dart';
 import 'package:uuid/uuid.dart';
-import 'storage_repository.dart';
+import 'storage.dart';
 
-class FirestoreRepository {
+class FireRepo {
   // Get instance of Firebase Firestore
   static FirebaseFirestore firestore = FirebaseFirestore.instance;
   // Cerate instance of products Database
@@ -56,15 +58,12 @@ class FirestoreRepository {
             deviceToken: deviceToken,
           )
           .toJson());
-      // sellerDB.doc(user.uid).collection('orders');
-      // s
     } on FirebaseException catch (e) {
       AppFirebaseFailure.fromCode(e.code);
     } catch (_) {}
   }
 
   Future<void> setupDeviceToken() async {
-    // Dashboard dashboard = Dashboard();
     try {
       final user = auth.FirebaseAuth.instance.currentUser;
       String? deviceToken = await FirebaseMessaging.instance.getToken();
@@ -78,8 +77,6 @@ class FirestoreRepository {
     } catch (_) {}
   }
 
-  // !
-
   static Future<void> setupOffers(
       List<Product> products, Offers offers, xfile) async {
     try {
@@ -88,7 +85,7 @@ class FirestoreRepository {
         await productsDB.doc(product.sId).update({'offers': offers.toJson()});
         productDB.add(product.toJson());
       }
-      // !
+
       String offerId = const Uuid().v1();
       String photoUrl = await StorageRepository().uploadImages('offer', xfile);
       await offerDB.doc(offerId).set({
@@ -104,6 +101,7 @@ class FirestoreRepository {
       await offerDB.doc(id).delete();
     } catch (_) {}
   }
+
 // ***
   // static Future<void> getOffers(
   //     List<Product> products, Offers offers, xfile) async {
@@ -123,13 +121,46 @@ class FirestoreRepository {
   //     log(e.toString());
   //   }
   // }
+// !
+  // static void testqry() async {
+  //   try {
+  //     for (var item in demoOrder.items!) {
+  //       List<Variant> variants = [];
+  //       var product = await productsDB
+  //           .doc(item.productId)
+  //           .get()
+  //           .then((snapshot) => Product.fromSnap(snapshot));
 
-// ***
-// ! TODO delete this below code
+  //       for (var v in product.variant!) {
+  //         variants.add(v);
+  //         if (v.color! == (item.color!)) {
+  //           List<Subvariant> subs = [];
+  //           for (var s in v.subvariant!) {
+  //             subs.add(s);
+  //             if (s.size! == (item.size!)) {
+  //               variants.remove(v);
+  //               subs.remove(s);
+  //               var stock = (int.parse(s.stock!) - int.parse(item.quantity!));
+  //               subs.add(s.copyWith(stock: stock.toString()));
+  //             }
+  //           }
+  //           variants.add(v.copyWith(subvariant: subs));
+  //         }
+  //       }
 
-//! TODO delete this above code
+  //       await productsDB
+  //           .doc(item.productId)
+  //           .update(product.copyWith(variant: variants).toJson());
+  //     }
+  //   } catch (e) {
+  //     log(e.toString());
+  //   }
+  // }
+
   static Future<void> orderMoveToDelivered(Orders orders, String id) async {
     try {
+      // List<Variant> variants = [];
+
       await sellerDB.doc(id).collection('orders').doc(orders.sId).delete();
       //
       await sellerDB
@@ -138,6 +169,34 @@ class FirestoreRepository {
           .doc(orders.sId)
           .set(orders.toJson());
       //
+      // for (var item in orders.items!) {
+      //   List<Variant> variants = [];
+      //   var product = await productsDB
+      //       .doc(item.productId)
+      //       .get()
+      //       .then((snapshot) => Product.fromSnap(snapshot));
+
+      //   for (var v in product.variant!) {
+      //     variants.add(v);
+      //     if (v.color! == (item.color!)) {
+      //       List<Subvariant> subs = [];
+      //       for (var s in v.subvariant!) {
+      //         subs.add(s);
+      //         if (s.size! == (item.size!)) {
+      //           variants.remove(v);
+      //           subs.remove(s);
+      //           var stock = (int.parse(s.stock!) - int.parse(item.quantity!));
+      //           subs.add(s.copyWith(stock: stock.toString()));
+      //         }
+      //       }
+      //       variants.add(v.copyWith(subvariant: subs));
+      //     }
+      //   }
+
+      //   await productsDB
+      //       .doc(item.productId)
+      //       .update(product.copyWith(variant: variants).toJson());
+      // }
     } on FirebaseException catch (e) {
       throw AppFirebaseFailure.fromCode(e.code);
     } catch (_) {}
@@ -147,7 +206,6 @@ class FirestoreRepository {
     try {
       var seller = await sellerDB.doc(id).get();
       return Seller.fromJsonFirebase(seller);
-      //
     } on FirebaseException catch (e) {
       throw AppFirebaseFailure.fromCode(e.code);
     } catch (_) {
@@ -155,7 +213,6 @@ class FirestoreRepository {
     }
   }
 
-// !
   static Future<void> deleteDelivery(String pId, String uId) async {
     try {
       await sellerDB.doc(uId).collection('delivered').doc(pId).delete();
@@ -166,23 +223,21 @@ class FirestoreRepository {
     }
   }
 
-// !
-  //
-  Future<void> setupDashboard(Seller dashboard) async {
-    try {
-      sellerDB.doc('overview').get().then((DocumentSnapshot documentSnapshot) {
-        if (!documentSnapshot.exists) {
-          sellerDB.doc('overview').set(dashboard.toJson());
-        }
-      });
-    } catch (_) {}
-  }
+  // Future<void> setupDashboard(Seller dashboard, String id) async {
+  //   try {
+  //     sellerDB.doc(id).get().then((DocumentSnapshot documentSnapshot) {
+  //       if (!documentSnapshot.exists) {
+  //         sellerDB.doc(id).set(dashboard.toJson());
+  //       }
+  //     });
+  //   } catch (_) {}
+  // }
 
   //
   // Upload a new Product to products Database
   //
-  static Future<void> addProduct(
-      BuildContext context, Product product, List<XFile>? images) async {
+  static Future<void> addProduct(BuildContext context, Product product,
+      List<XFile>? images, List<Variant> variants) async {
     // Store Multiple Images urls
     List<String> photoUrls = [];
     final user = auth.FirebaseAuth.instance.currentUser;
@@ -194,7 +249,7 @@ class FirestoreRepository {
       // creates unique id based on time
       String productId = const Uuid().v1();
       // Find a minimum price in list
-      for (var variant in product.variant!) {
+      for (var variant in variants) {
         for (var subvariant in variant.subvariant!) {
           minPrice.add(double.parse(subvariant.price!));
         }
@@ -219,11 +274,11 @@ class FirestoreRepository {
         images: photoUrls,
       );
       await productsDB.doc(productId).set(modifiyProduct.toJson());
-      await sellerDB
-          .doc(user.uid)
-          .collection('products')
-          .doc(productId)
-          .set(modifiyProduct.toJson());
+      // await sellerDB
+      //     .doc(user.uid)
+      //     .collection('products')
+      //     .doc(productId)
+      //     .set(modifiyProduct.toJson());
       // .then((value) =>
       // DialogBoxes.showAutoCloseDialog(context,
       //     type: InfoDialog.successful,
@@ -242,7 +297,7 @@ class FirestoreRepository {
     BuildContext context,
     Product product,
     List<XFile>? images,
-    List<Variant> variant,
+    // List<Variant> variant,
     // String discount,
   ) async {
     List photoUrls = [];

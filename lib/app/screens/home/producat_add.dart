@@ -21,7 +21,7 @@ class _ProductAddPageState extends State<ProductAddPage> {
   var pDays = TextEditingController();
 
   // Create some values
-
+  bool isLoading = false;
   String pickerColor = '0xffFF7B2C';
   String currentColor = '0xffFF7B2C';
   // Create Option Item List
@@ -113,15 +113,17 @@ class _ProductAddPageState extends State<ProductAddPage> {
               title: 'Is there a return?',
             ),
             SizedBox(height: 5.w),
-            MainButton(
-                onTap: () {
-                  if (formvalidation) {
-                    if (isAllNotempty()) {
-                      productUpload();
-                    }
-                  } else {}
-                },
-                text: 'Upload')
+            isLoading
+                ? const Center(child: HRDots())
+                : MainButton(
+                    onTap: () {
+                      if (formvalidation) {
+                        if (isAllNotempty()) {
+                          productUpload();
+                        }
+                      } else {}
+                    },
+                    text: 'Upload')
           ],
         ),
       ),
@@ -143,10 +145,11 @@ class _ProductAddPageState extends State<ProductAddPage> {
 
   void productUpload() async {
     if (productVariantList.isNotEmpty && imageFileList != null) {
+      setState(() => isLoading = true);
       Product product = Product(
         title: pName.text,
         description: pDescription.text,
-        variant: productVariantList,
+        // variant: productVariantList,
         shipping: Shipping(
           deliveryPrice: pDelivery.text,
           returnDays: pDays.text,
@@ -154,11 +157,13 @@ class _ProductAddPageState extends State<ProductAddPage> {
         package: package,
       );
 
-      await FirestoreRepository.addProduct(context, product, imageFileList)
+      await FireRepo.addProduct(
+              context, product, imageFileList, productVariantList)
           .then((value) {
         Navigator.of(context).pop();
       });
     } else {
+      setState(() => isLoading = false);
       // TODO
     }
   }

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:isumi/core/utils/utils.dart';
 import 'package:onyxsio/onyxsio.dart';
 
+import 'widget/bottom_sheet.dart';
+
 class ProductDetailsPage extends StatefulWidget {
   final Product product;
   const ProductDetailsPage({Key? key, required this.product}) : super(key: key);
@@ -11,35 +13,35 @@ class ProductDetailsPage extends StatefulWidget {
 }
 
 class _ProductDetailsPageState extends State<ProductDetailsPage> {
-  String price = '0.0';
-  int selectedColor = 0, selectedSize = 0;
-  List<Variant> veriants = [];
-  List minPrice = [];
+  // String price = '0.0';
+  // int selectedColor = 0, selectedSize = 0;
+  // List<Variant> veriants = [];
+  // List minPrice = [];
 
   @override
   void initState() {
-    loadingPrice();
+    // loadingPrice();
     super.initState();
   }
 
-  void loadingPrice() {
-    setState(() {
-      price = widget.product.price!.value!;
-      veriants = widget.product.variant!;
-      for (int i = 0; i < veriants.length; i++) {
-        for (int j = 0; j < veriants[i].subvariant!.length; j++) {
-          if (veriants[i].subvariant![j].price == price) {
-            selectedColor = i;
-            selectedSize = j;
-          }
-        }
-      }
-    });
-  }
+  // void loadingPrice() {
+  //   setState(() {
+  //     price = widget.product.price!.value!;
+  //     veriants = widget.product.variant!;
+  //     for (int i = 0; i < veriants.length; i++) {
+  //       for (int j = 0; j < veriants[i].subvariant!.length; j++) {
+  //         if (veriants[i].subvariant![j].price == price) {
+  //           selectedColor = i;
+  //           selectedSize = j;
+  //         }
+  //       }
+  //     }
+  //   });
+  // }
 
-  List<Subvariant> convertToSize(Variant sub) {
-    return sub.subvariant!;
-  }
+  // List<Subvariant> convertToSize(Variant sub) {
+  //   return sub.subvariant!;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -82,20 +84,25 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                     children: [
                       Expanded(
                           child:
-                              Text(widget.product.title!, style: TxtStyle.b8B)),
+                              Text(widget.product.title!, style: TxtStyle.b7)),
                     ],
                   ),
                   space,
                   reviewAndRating(),
-                  // space,
+                  space,
                   const Divider(),
-                  Text('Select color', style: TxtStyle.b5B),
+                  Text('Choose the variation', style: TxtStyle.b5B),
                   space,
-                  _buildColorGrid(),
-                  space, const Divider(),
-                  Text('Select size', style: TxtStyle.b5B),
-                  space,
-                  _buildSizeGrid(),
+                  GestureDetector(
+                    onTap: showVeriant,
+                    child: Row(
+                      children: [
+                        SvgPicture.asset(AppIcon.size, width: 10.w),
+                        SizedBox(width: 4.w),
+                        SvgPicture.asset(AppIcon.color, width: 10.w),
+                      ],
+                    ),
+                  ),
                   space,
                 ],
               ),
@@ -117,68 +124,15 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
     );
   }
 
-  //
-  Widget _buildColorGrid() => GridView.extent(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      maxCrossAxisExtent: 40,
-      mainAxisSpacing: 2.w,
-      crossAxisSpacing: 2.w,
-      children: _buildGridTileList());
+  void showVeriant() {
+    showModalBottomSheet<void>(
+        context: context,
+        backgroundColor: Colors.transparent,
+        builder: (BuildContext context) {
+          return VeriantChoose(product: widget.product);
+        });
+  }
 
-  //
-  List<Widget> _buildGridTileList() => List.generate(
-      veriants.length,
-      (i) => GestureDetector(
-            onTap: () {
-              setState(() {
-                selectedColor = i;
-                selectedSize = 0;
-                price = convertToSize(veriants[i])[0].price!;
-              });
-            },
-            child: Container(
-              height: 12.w,
-              width: 12.w,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Color(int.parse(veriants[i].color!)),
-                border: selectedColor == i
-                    ? Border.all(color: AppColor.yellow, width: 4)
-                    : null,
-              ),
-            ),
-          ));
-
-//
-  Widget _buildSizeGrid() => GridView.extent(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      maxCrossAxisExtent: 46,
-      mainAxisSpacing: 2.w,
-      crossAxisSpacing: 2.w,
-      children: _buildSizeGridTileList());
-
-  List<GestureDetector> _buildSizeGridTileList() => List.generate(
-      convertToSize(veriants[selectedColor]).length,
-      (i) => GestureDetector(
-            onTap: () {
-              setState(() {
-                price = convertToSize(veriants[selectedColor])[i].price!;
-                selectedSize = i;
-              });
-            },
-            child: Container(
-              height: 12.w,
-              width: 13.w,
-              decoration: BoxDeco.subveriantbox(selectedSize == i),
-              child: Center(
-                  child: Text(
-                convertToSize(veriants[selectedColor])[i].size!,
-                style: TxtStyle.size(selectedSize == i),
-              )),
-            ),
-          ));
 //
   SizedBox _buildImageSilder(Size size) {
     return SizedBox(
@@ -200,7 +154,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                   image: AppIcon.trash,
                   buttonGradient: AppColor.friewatchGradient,
                   onTap: () async {
-                    await FirestoreRepository.deleteProduct(widget.product.sId!)
+                    await FireRepo.deleteProduct(widget.product.sId!)
                         .then((value) => Navigator.pop(context));
                   },
                   text: 'Delete')),
@@ -229,7 +183,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
           Text(
               Utils.currency(
                   name: widget.product.price!.currency,
-                  amount: double.parse(price)),
+                  amount: double.parse(widget.product.price!.value!)),
               style: TxtStyle.price),
         if (hasOffer)
           Row(
@@ -237,7 +191,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
               Text(
                   Utils.offerCal(
                     name: widget.product.price!.currency,
-                    amount: price,
+                    amount: widget.product.price!.value!,
                     offer: widget.product.offers!.percentage,
                   ),
                   style: TxtStyle.price),
@@ -245,7 +199,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
               Text(
                   Utils.currency(
                       name: widget.product.price!.currency,
-                      amount: double.parse(price)),
+                      amount: double.parse(widget.product.price!.value!)),
                   style: TxtStyle.currency
                       .copyWith(decoration: TextDecoration.lineThrough)),
               Space.x3,
@@ -259,7 +213,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
               Text(
                   Utils.offerCal(
                     name: widget.product.price!.currency,
-                    amount: price,
+                    amount: widget.product.price!.value!,
                     offer: widget.product.price!.discount,
                   ),
                   style: TxtStyle.price),
@@ -267,7 +221,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
               Text(
                   Utils.currency(
                       name: widget.product.price!.currency,
-                      amount: double.parse(price)),
+                      amount: double.parse(widget.product.price!.value!)),
                   style: TxtStyle.currency
                       .copyWith(decoration: TextDecoration.lineThrough)),
               Space.x3,
@@ -290,14 +244,14 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
             SizedBox(width: 2.w),
             Text(
               widget.product.rivews!.ratingValue!,
-              style: TxtStyle.b5B,
+              style: TxtStyle.b3,
             ),
           ],
         ),
         SizedBox(width: 2.w),
         Text(
           ' ( ${widget.product.rivews!.reviewCount} reviews)',
-          style: TxtStyle.reviews,
+          style: TxtStyle.l3,
         ),
       ],
     );
